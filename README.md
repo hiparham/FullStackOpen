@@ -1,1 +1,1 @@
-# Full Stack Open Course | Jan 2025
+# Full Stack Open | Jan 2025
