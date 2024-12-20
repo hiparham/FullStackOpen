@@ -1,9 +1,8 @@
-# [FullStack Open Course Solutions](https://fullstackopen.com/en)
+# [Full Stack Open Course Solutions](https://fullstackopen.com/en)
 
-**The journey began on December 20, 2024 .** 
 
-## Part0 : Fundamentals of Webapps
->Part 0 Started and finished on Day 1 ( December 20 )
+## Part 0 : Fundamentals of Webapps
+
 * **Part 0a | General Info** : Familiarizing myself with Git & Github, getting to know the structure of the course and how assignments are graded, finding out about the prerequisites.
 \
 Useful Resources :\
@@ -15,5 +14,5 @@ Useful Resources :\
 [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP)\
 [Wikipedia](https://en.wikipedia.org/wiki/HTTP)
 
-## Part01 : Introduction to React
+## Part 1 : Introduction to React
 
