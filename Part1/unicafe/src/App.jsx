@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
-function App() {
-  const [count, setCount] = useState(0)
+import { useState } from "react";
+import VoteButton from "./VoteButton";
+import VoteDisplay from "./VoteDisplay";
+import Container from "./Container";
+import Stats from "./Stats";
+//
+export default function App() {
+  
+  const [good, setGood] = useState(0);
+  const [bad, setBad] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const allZero = good + bad + neutral === 0;
+  const all = good + bad + neutral;
+  const average = (good - bad) / all;
+  const positives = (good * 100) / all;
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Container>
+      <Stats
+        positives={positives}
+        all={all}
+        allZero={allZero}
+        average={average}
+      />
+      <VoteDisplay good={good} bad={bad} neutral={neutral} />
+      <VoteButton text="Good" GiveVote={() => setGood(good + 1)} />
+      <VoteButton text="Bad" GiveVote={() => setBad(bad + 1)} />
+      <VoteButton text="Neutral" GiveVote={() => setNeutral(neutral + 1)} />
+    </Container>
+  );
 }
-
-export default App
