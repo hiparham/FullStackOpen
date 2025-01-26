@@ -1,4 +1,4 @@
-import axios from "axios";
+import { postPhoneNumber, updateNumber } from "../Helpers/PhoneBookFunctions";
 export default function Form({
   persons,
   setPersonNum,
@@ -10,7 +10,6 @@ export default function Form({
   function handleSubmit(e) {
     e.preventDefault();
     const newPerson = {
-      id: persons.length + 1,
       name: personName,
       number: personNum,
     };
@@ -23,14 +22,15 @@ export default function Form({
           `${userExists.name} already exists, you want to edit the number?`
         )
       ) {
-        const newPersons = persons.map((x) =>
-          x.name === newPerson.name ? newPerson : x
+        updateNumber(userExists.id, { ...userExists, number: personNum }).then(
+          (data) => {
+            setPersons(persons.map((x) => (x.id === userExists.id ? data : x)));
+          }
         );
-        setPersons(newPersons);
       }
     } else {
-      axios.post("http://localhost:3001/persons", newPerson).then(() => {
-        setPersons([...persons, newPerson]);
+      postPhoneNumber(newPerson).then((data) => {
+        setPersons([...persons, data]);
       });
     }
     // Cleaning Up

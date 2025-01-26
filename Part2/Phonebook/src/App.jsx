@@ -1,19 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Form from "./Components/Form";
 import FilterResult from "./Components/FilterResult";
 import DisplayPersons from "./Components/DisplayPersons";
 import Header from "./Components/Header";
 import Wrapper from "./Components/Wrapper";
-import { useEffect } from "react";
-import axios from "axios";
+import { deleteNumber, getAll } from "./Helpers/PhoneBookFunctions";
+//
 export default function App() {
   const [personName, setPersonName] = useState("");
   const [personNum, setPersonNum] = useState("");
   const [filteredNames, SetFilteredResults] = useState("");
   const [persons, setPersons] = useState([]);
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
+    getAll().then((response) => {
+      setPersons(response);
     });
   }, []);
   //
@@ -23,6 +23,14 @@ export default function App() {
           x.name.toLowerCase().includes(filteredNames.toLowerCase())
         )
       : persons;
+  //
+  const DeletePerson = (id) => {
+    deleteNumber(id).then((response) => {
+      const oldItem = response.data.id;
+
+      setPersons(persons.filter((x) => x.id !== oldItem));
+    });
+  };
   //
   return (
     <Wrapper>
@@ -36,7 +44,10 @@ export default function App() {
         setPersonNum={setPersonNum}
         setPersons={setPersons}
       />
-      <DisplayPersons personsToShow={personsToShow} />
+      <DisplayPersons
+        personsToShow={personsToShow}
+        DeletePerson={DeletePerson}
+      />
     </Wrapper>
   );
 }
