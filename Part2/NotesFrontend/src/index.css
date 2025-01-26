@@ -1,0 +1,39 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.container {
+  max-width: 35rem;
+  margin-inline: auto;
+  padding-block: 5vh;
+  width: 90%;
+}
+.errorMsg {
+  color: red;
+  font-weight: 600;
+}
+.successMsg {
+  color: green;
+  font-weight: 600;
+}
+li {
+  list-style: none;
+}
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+label {
+  margin-left: 0.2rem;
+}
+input[type="checkbox"] {
+  margin-left: 0.5rem;
+  margin-top: 0.2rem;
+}
+form button {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  padding: 0.5rem;
+}

@@ -3,16 +3,25 @@ import NotesDisplay from "./Components/NotesDisplay";
 import Form from "./Components/Form";
 import ShowButtons from "./Components/ShowButtons";
 import { EditOldItem, GetAllItems, postNewItem } from "./Services/Helpers";
+import SuccessMsg from "./Components/SuccessMsg";
+import ErrorMessage from "./Components/ErrorMessage";
 export default function App() {
+  const [error, setError] = useState(false);
+  const [notif, setNotif] = useState("");
   const [AllNotes, setAllNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAll, setShowAll] = useState(true);
   //
   useEffect(() => {
-    GetAllItems().then((response) => {
-      setLoading(false);
-      setAllNotes(response);
-    });
+    GetAllItems()
+      .then((response) => {
+        setLoading(false);
+        setError(false);
+        setAllNotes(response);
+      })
+      .catch(() => {
+        setError("Something Went Wrong, Refresh the page.");
+      });
   }, []);
   // Adding new note
   function AddNewNote(noteobject) {
@@ -20,9 +29,20 @@ export default function App() {
       content: noteobject.content,
       important: noteobject.important,
     };
-    postNewItem(cr).then((response) => {
-      setAllNotes([...AllNotes, { ...response }]);
-    });
+    postNewItem(cr)
+      .then((response) => {
+        setAllNotes([...AllNotes, { ...response }]);
+        setNotif("Note Added");
+        setTimeout(() => {
+          setNotif("");
+        }, 1500);
+      })
+      .catch(() => {
+        setError("Post was not added, try again.");
+        setTimeout(() => {
+          setError("");
+        }, 1500);
+      });
   }
   // Editing Importance
   const changeImportance = (x) => {
@@ -31,9 +51,16 @@ export default function App() {
     EditOldItem(x, newItem)
       .then((res) => {
         setAllNotes(AllNotes.map((n) => (n.id === itemFind.id ? res : n)));
+        setNotif("Note Edited");
+        setTimeout(() => {
+          setNotif("");
+        }, 1500);
       })
       .catch(() => {
-        alert(`The note ${itemFind.content} has been deleted already.`);
+        setError("Note Does not exist.");
+        setTimeout(() => {
+          setError(false);
+        }, 1500);
         setAllNotes(AllNotes.filter((x) => x.id !== itemFind.id));
       });
   };
@@ -42,7 +69,9 @@ export default function App() {
   const NotesToShow = showAll ? AllNotes : AllNotes.filter((x) => x.important);
   //
   return (
-    <div>
+    <section className="container">
+      <SuccessMsg txt={notif} />
+      <ErrorMessage txt={error} />
       <ShowButtons handleShow={toggleImportance} />
       <Form AddNote={AddNewNote} />
       {loading ? (
@@ -50,6 +79,6 @@ export default function App() {
       ) : (
         <NotesDisplay array={NotesToShow} toggleImportant={changeImportance} />
       )}
-    </div>
+    </section>
   );
 }

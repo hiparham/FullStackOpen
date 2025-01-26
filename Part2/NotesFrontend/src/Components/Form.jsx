@@ -21,14 +21,16 @@ export default function Form({ AddNote }) {
         value={note}
         onChange={(e) => setNote(e.target.value)}
       />
-      <label htmlFor="important">Important</label>
-      <input
-        type="checkbox"
-        name="important"
-        id="important"
-        checked={imp}
-        onChange={() => setImp(!imp)}
-      />
+      <div>
+        <label htmlFor="important">Important</label>
+        <input
+          type="checkbox"
+          name="important"
+          id="important"
+          checked={imp}
+          onChange={() => setImp(!imp)}
+        />
+      </div>
       <button type="submit">Add Note</button>
     </form>
   );

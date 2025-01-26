@@ -5,16 +5,25 @@ import DisplayPersons from "./Components/DisplayPersons";
 import Header from "./Components/Header";
 import Wrapper from "./Components/Wrapper";
 import { deleteNumber, getAll } from "./Helpers/PhoneBookFunctions";
+import Notification from "./Components/Notification";
 //
 export default function App() {
+  const [notif, setNotif] = useState("");
   const [personName, setPersonName] = useState("");
   const [personNum, setPersonNum] = useState("");
   const [filteredNames, SetFilteredResults] = useState("");
   const [persons, setPersons] = useState([]);
   useEffect(() => {
-    getAll().then((response) => {
-      setPersons(response);
-    });
+    getAll()
+      .then((response) => {
+        setPersons(response);
+      })
+      .catch(() => {
+        setNotif({
+          type: "error",
+          message: "Something went wrong, try again.",
+        });
+      });
   }, []);
   //
   const personsToShow =
@@ -25,16 +34,31 @@ export default function App() {
       : persons;
   //
   const DeletePerson = (id) => {
-    deleteNumber(id).then((response) => {
-      const oldItem = response.data.id;
-
-      setPersons(persons.filter((x) => x.id !== oldItem));
-    });
+    deleteNumber(id)
+      .then((response) => {
+        const oldItem = response.data.id;
+        setPersons(persons.filter((x) => x.id !== oldItem));
+        setNotif({ type: "success", message: "contact deleted." });
+        setTimeout(() => {
+          setNotif("");
+        }, 1000);
+      })
+      .catch(() => {
+        setNotif({
+          type: "error",
+          message: `already deleted.`,
+        });
+        setTimeout(() => {
+          setNotif("");
+          setPersons(persons.filter((x) => x.id !== id));
+        }, 1000);
+      });
   };
   //
   return (
     <Wrapper>
       <Header />
+      <Notification notif={notif} />
       <FilterResult SetFilteredResults={SetFilteredResults} />
       <Form
         persons={persons}
@@ -43,6 +67,7 @@ export default function App() {
         setPersonName={setPersonName}
         setPersonNum={setPersonNum}
         setPersons={setPersons}
+        setNotif={setNotif}
       />
       <DisplayPersons
         personsToShow={personsToShow}

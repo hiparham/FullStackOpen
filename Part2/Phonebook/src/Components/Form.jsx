@@ -6,6 +6,7 @@ export default function Form({
   personName,
   personNum,
   setPersons,
+  setNotif,
 }) {
   function handleSubmit(e) {
     e.preventDefault();
@@ -22,15 +23,28 @@ export default function Form({
           `${userExists.name} already exists, you want to edit the number?`
         )
       ) {
-        updateNumber(userExists.id, { ...userExists, number: personNum }).then(
-          (data) => {
+        updateNumber(userExists.id, { ...userExists, number: personNum })
+          .then((data) => {
             setPersons(persons.map((x) => (x.id === userExists.id ? data : x)));
-          }
-        );
+            setNotif({ type: "success", message: "contact number changed." });
+            setTimeout(() => {
+              setNotif("");
+            }, 1000);
+          })
+          .catch(() => {
+            setNotif({ type: "success", message: "something went wrong." });
+            setTimeout(() => {
+              setNotif("");
+            }, 1000);
+          });
       }
     } else {
       postPhoneNumber(newPerson).then((data) => {
         setPersons([...persons, data]);
+        setNotif({ type: "success", message: "contact added." });
+        setTimeout(() => {
+          setNotif("");
+        }, 1000);
       });
     }
     // Cleaning Up
