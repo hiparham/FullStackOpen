@@ -1,10 +1,11 @@
+import axios from "axios";
 export default function Form({
   persons,
   setPersonNum,
   setPersonName,
   personName,
   personNum,
-  setPersons
+  setPersons,
 }) {
   function handleSubmit(e) {
     e.preventDefault();
@@ -28,7 +29,9 @@ export default function Form({
         setPersons(newPersons);
       }
     } else {
-      setPersons([...persons, newPerson]);
+      axios.post("http://localhost:3001/persons", newPerson).then(() => {
+        setPersons([...persons, newPerson]);
+      });
     }
     // Cleaning Up
     setPersonName("");
