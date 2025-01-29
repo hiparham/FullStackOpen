@@ -25,8 +25,7 @@ let persons = [
   },
 ];
 // Morgan Configuration
-//app.use(morgan("tiny"));
-//
+app.use(morgan("tiny"));
 morgan.token("logger", (req) => {
   return JSON.stringify(req.body);
 });
