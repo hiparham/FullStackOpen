@@ -80,7 +80,7 @@ app.post("/api/persons", (req, res) => {
   persons = [...persons, newNumber];
   res.json(newNumber);
 });
-//
+// Running the server.
 app.listen(3001, () => {
   console.log("App is running");
 });
