@@ -2,6 +2,9 @@ const express = require("express");
 const morgan = require("morgan");
 const app = express();
 app.use(express.json());
+require("dotenv").config();
+const cors = require("cors");
+app.use(cors());
 let persons = [
   {
     id: "1",
@@ -23,6 +26,11 @@ let persons = [
     name: "Mary Poppendieck",
     number: "39-23-6423122",
   },
+  {
+    id: "5",
+    name: "Node Js Master",
+    number: "39-23-6423122",
+  },
 ];
 // Morgan Configuration
 app.use(morgan("tiny"));
@@ -30,6 +38,9 @@ morgan.token("logger", (req) => {
   return JSON.stringify(req.body);
 });
 app.post("*", morgan(":logger :method :url"));
+//
+// Serving Static files
+app.use(express.static("dist"));
 // Getting information
 app.get("/info", (req, res) => {
   const date = new Date().toDateString();
@@ -47,7 +58,6 @@ app.get("/api/persons/:id", (req, res) => {
   if (!itemFind) {
     return res.status(404).end();
   }
-
   res.json(itemFind);
 });
 // Deleting Single Resource
@@ -81,6 +91,4 @@ app.post("/api/persons", (req, res) => {
   res.json(newNumber);
 });
 // Running the server.
-app.listen(3001, () => {
-  console.log("App is running");
-});
+app.listen(process.env.PORT);

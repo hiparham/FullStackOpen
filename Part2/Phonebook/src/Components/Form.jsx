@@ -53,20 +53,27 @@ export default function Form({
     e.target.reset();
   }
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-[1rem] md:grid grid-cols-5 md:gap-[.25rem]">
       <input
         type="text"
         placeholder="Contact Name"
         value={personName}
         onChange={(e) => setPersonName(e.target.value)}
+        className="py-3 px-2 border border-emerald-200 col-start-1 col-end-3"
       />
       <input
         type="text"
         placeholder="Contact Number"
         value={personNum}
         onChange={(e) => setPersonNum(e.target.value)}
+        className="py-3 px-2 border border-emerald-200 col-start-3 col-end-5"
       />
-      <button type="submit">Add Contact</button>
+      <button
+        type="submit"
+        className="cursor-pointer bg-sky-500 text-white py-3 font-semibold text-[1.05rem] col-start-5 col-end-6"
+      >
+        Add Contact
+      </button>
     </form>
   );
 }
