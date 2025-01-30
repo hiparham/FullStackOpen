@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 require("dotenv").config();
 const cors = require("cors");
+const errorHandler = require("./helpers/ErrorHandler");
 app.use(cors());
 let persons = [
   {
@@ -90,5 +91,21 @@ app.post("/api/persons", (req, res) => {
   persons = [...persons, newNumber];
   res.json(newNumber);
 });
+// Editing A Phone Number
+app.put("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const itemFind = persons.find((x) => x.id === id);
+  if (!itemFind) {
+    return res.status(204).json({ message: "Contact does not exist." });
+  }
+  const UpdatedContact = {
+    id: itemFind.id,
+    name: itemFind.name,
+    number: req.body.number,
+  };
+  persons = persons.map((x) => (x.id === id ? UpdatedContact : x));
+  res.status(200).json(UpdatedContact);
+});
+app.use(errorHandler);
 // Running the server.
 app.listen(process.env.PORT);

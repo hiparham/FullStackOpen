@@ -25,6 +25,7 @@ export default function Form({
       ) {
         updateNumber(userExists.id, { ...userExists, number: personNum })
           .then((data) => {
+
             setPersons(persons.map((x) => (x.id === userExists.id ? data : x)));
             setNotif({ type: "success", message: "contact number changed." });
             setTimeout(() => {
@@ -40,6 +41,7 @@ export default function Form({
       }
     } else {
       postPhoneNumber(newPerson).then((data) => {
+
         setPersons([...persons, data]);
         setNotif({ type: "success", message: "contact added." });
         setTimeout(() => {
@@ -53,7 +55,10 @@ export default function Form({
     e.target.reset();
   }
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-[1rem] md:grid grid-cols-5 md:gap-[.25rem]">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-[1rem] md:grid grid-cols-5 md:gap-[.25rem]"
+    >
       <input
         type="text"
         placeholder="Contact Name"

@@ -16,7 +16,7 @@ const deleteNumber = (id) => {
   return request;
 };
 
-const updateNumber = (id,item) => {
+const updateNumber = (id, item) => {
   const request = axios.put(`${Base}/${id}`, item);
   return request.then((response) => response.data);
 };
