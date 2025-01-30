@@ -32,7 +32,7 @@ export default function App() {
     };
     postNewItem(cr)
       .then((response) => {
-        setAllNotes([...AllNotes, { ...response }]);
+        setAllNotes(response.notes);
         setNotif("Note Added");
         setTimeout(() => {
           setNotif("");
