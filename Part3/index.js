@@ -4,108 +4,110 @@ const app = express();
 app.use(express.json());
 require("dotenv").config();
 const cors = require("cors");
-const errorHandler = require("./helpers/ErrorHandler");
+const { errorHandler } = require("./helpers/ErrorHandler");
+const { Person } = require("./Models");
+const mongoose = require("mongoose");
 app.use(cors());
-let persons = [
-  {
-    id: "1",
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: "2",
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: "3",
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: "4",
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-  {
-    id: "5",
-    name: "Node Js Master",
-    number: "39-23-6423122",
-  },
-];
-// Morgan Configuration
+// Morgan
 app.use(morgan("tiny"));
 morgan.token("logger", (req) => {
   return JSON.stringify(req.body);
 });
 app.post("*", morgan(":logger :method :url"));
-//
-// Serving Static files
+// Serving Static files ( React App )
 app.use(express.static("dist"));
-// Getting information
-app.get("/info", (req, res) => {
-  const date = new Date().toDateString();
-  const HTML = `Phonebook has info for ${persons.length} people <br/> ${date}`;
-  res.send(HTML);
-});
-// Getting all resources
-app.get("/api/persons", (req, res) => {
-  res.json(persons);
-});
-// Getting single resource
-app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const itemFind = persons.find((x) => x.id === id);
-  if (!itemFind) {
-    return res.status(404).end();
+//
+// Getting Contacts
+//
+app.get("/api/persons", async (req, res) => {
+  try {
+    const AllPersons = await Person.find({});
+    return res.status(200).json(AllPersons);
+  } catch (error) {
+    res.status(500).end();
   }
-  res.json(itemFind);
 });
-// Deleting Single Resource
-app.delete("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const itemFind = persons.find((x) => x.id === id);
-  if (!itemFind) {
-    return res.status(400).json({ message: "phonenumber does not exist" });
+//
+app.get("/api/persons/:id", async (req, res, next) => {
+  if (!mongoose.isValidObjectId(req.params.id)) {
+    return res.status(400).json({ message: "Malformatted id." });
   }
-  persons = persons.filter((x) => x.id !== id);
-  res.status(204).end();
+  //
+  try {
+    const findItem = await Person.findById(req.params.id);
+    if (findItem === null) {
+      throw new Error("Nothing found.");
+    } else {
+      return res.status(200).json(findItem);
+    }
+  } catch (error) {
+    return res.status(404).json({ message: "Nothing Found." });
+  }
 });
-// Adding a phone number
-app.post("/api/persons", (req, res) => {
+//
+//
+//
+// Posting New Contact
+app.post("/api/persons", async (req, res) => {
   const { name, number } = req.body;
   if (!name || !number) {
-    return res.status(400).json({ message: "Name & Number must exist." });
+    return res.status(400).json({ message: "Name and number must exist." });
   }
-  const exists = persons.find(
-    (x) => x.name.trim().toLowerCase() === name.trim().toLowerCase()
-  );
-  if (exists) {
-    return res.status(400).json({ message: "Contact already exists." });
+  try {
+    const addedContact = await Person.create({ name, number });
+    return res.status(201).json(addedContact);
+  } catch (error) {
+    return res.status(400).json({ message: "Something went wrong." });
   }
-  const newNumber = {
-    id: String(Math.round(Math.random() * 1022)),
-    name,
-    number,
-  };
-  persons = [...persons, newNumber];
-  res.json(newNumber);
 });
-// Editing A Phone Number
-app.put("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  const itemFind = persons.find((x) => x.id === id);
-  if (!itemFind) {
-    return res.status(204).json({ message: "Contact does not exist." });
+//
+//
+//
+// Updating Number
+//
+app.put("/api/persons/:id", async (req, res) => {
+  if (!req.body.number) {
+    return res.status(400).json({ message: "Number must exist." });
   }
-  const UpdatedContact = {
-    id: itemFind.id,
-    name: itemFind.name,
-    number: req.body.number,
-  };
-  persons = persons.map((x) => (x.id === id ? UpdatedContact : x));
-  res.status(200).json(UpdatedContact);
+  try {
+    const itemFind = await Person.findById(req.params.id);
+    await Person.findOneAndUpdate(
+      {
+        _id: itemFind._id,
+      },
+      { number: req.body.number }
+    );
+    return res.json({
+      id: itemFind._id,
+      name: itemFind.name,
+      number: req.body.number,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: "Bad request." });
+  }
 });
+//
+//
+// Removing Numbers
+app.delete("/api/persons/:id", async (req, res) => {
+  try {
+    await Person.deleteOne({ _id: req.params.id });
+    return res.status(200).json({ message: "contact deleted." });
+  } catch (error) {
+    return res.status(404).json({ message: "No contact found." });
+  }
+});
+//
+//
 app.use(errorHandler);
 // Running the server.
-app.listen(process.env.PORT);
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(3001, () => {
+      console.log("App Is Running");
+    });
+  })
+  .catch(() => {
+    process.exit(1);
+  });

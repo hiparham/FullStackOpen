@@ -35,9 +35,8 @@ export default function App() {
   //
   const DeletePerson = (id) => {
     deleteNumber(id)
-      .then((response) => {
-        const oldItem = response.data.id;
-        setPersons(persons.filter((x) => x.id !== oldItem));
+      .then(() => {
+        setPersons(persons.filter((x) => x.id !== id));
         setNotif({ type: "success", message: "contact deleted." });
         setTimeout(() => {
           setNotif("");
