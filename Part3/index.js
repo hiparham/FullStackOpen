@@ -23,8 +23,8 @@ app.get("/api/persons", async (req, res) => {
   try {
     const AllPersons = await Person.find({});
     return res.status(200).json(AllPersons);
-  } catch (error) {
-    res.status(500).end();
+  } catch {
+    return res.status(404).json({ message: "No Contacts found" });
   }
 });
 //
@@ -73,6 +73,7 @@ app.put("/api/persons/:id", async (req, res, next) => {
     next(error);
   }
 });
+
 //
 // Removing Numbers
 app.delete("/api/persons/:id", async (req, res, next) => {
