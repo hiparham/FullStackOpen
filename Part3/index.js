@@ -41,47 +41,34 @@ app.get("/api/persons/:id", async (req, res, next) => {
 });
 //
 // Posting New Contact
-app.post("/api/persons", async (req, res) => {
-  const { name, number } = req.body;
-  if (!name || !number) {
-    return res.status(400).json({ message: "Name and number must exist." });
-  }
+app.post("/api/persons", async (req, res, next) => {
+  const NewContact = new Person({
+    name: req.body.name,
+    number: req.body.number,
+  });
+  //
   try {
-    const findPerson = await Person.findOne({ name: name });
-    console.log(findPerson, "F");
-
-    if (findPerson) {
-      return res.status(400).json({ message: "Contact Already Exists." });
-    }
-    const addedContact = await Person.create({ name, number });
+    const addedContact = await NewContact.save();
     return res.status(201).json(addedContact);
   } catch (error) {
-    return res.status(400).json({ message: "Something went wrong." });
+    next(error);
   }
 });
 //
 // Updating Number
 //
 app.put("/api/persons/:id", async (req, res, next) => {
-  if (!req.body.number) {
-    return res.status(400).json({ message: "Number must exist." });
-  }
   try {
     const itemFind = await Person.findById(req.params.id);
     if (!itemFind) {
       return res.status(404).json({ message: "No Contact Found." });
     }
-    await Person.findOneAndUpdate(
-      {
-        _id: itemFind._id,
-      },
-      { number: req.body.number }
+    const newContact = await Person.findByIdAndUpdate(
+      req.params.id,
+      { number: req.body.number },
+      { new: true, runValidators: true }
     );
-    return res.json({
-      id: itemFind._id,
-      name: itemFind.name,
-      number: req.body.number,
-    });
+    return res.json(newContact);
   } catch (error) {
     next(error);
   }
@@ -94,7 +81,7 @@ app.delete("/api/persons/:id", async (req, res, next) => {
     if (!itemFind) {
       return res.status(404).json({ message: "No Item Found." });
     } else {
-      await Person.deleteOne({ _id: req.params.id });
+      await Person.findByIdAndDelete(req.params.id);
       return res.status(204).end();
     }
   } catch (error) {
