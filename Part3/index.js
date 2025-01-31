@@ -5,7 +5,7 @@ app.use(express.json());
 require("dotenv").config();
 const cors = require("cors");
 const { errorHandler } = require("./helpers/ErrorHandler");
-const { Person } = require("./Models");
+const { Person } = require("./models/Contact");
 const mongoose = require("mongoose");
 app.use(cors());
 // Morgan
@@ -29,23 +29,16 @@ app.get("/api/persons", async (req, res) => {
 });
 //
 app.get("/api/persons/:id", async (req, res, next) => {
-  if (!mongoose.isValidObjectId(req.params.id)) {
-    return res.status(400).json({ message: "Malformatted id." });
-  }
-  //
   try {
     const findItem = await Person.findById(req.params.id);
-    if (findItem === null) {
-      throw new Error("Nothing found.");
-    } else {
-      return res.status(200).json(findItem);
+    if (!findItem) {
+      return res.status(404).json({ message: "Nothing found." });
     }
+    return res.status(200).json(findItem);
   } catch (error) {
-    return res.status(404).json({ message: "Nothing Found." });
+    next(error);
   }
 });
-//
-//
 //
 // Posting New Contact
 app.post("/api/persons", async (req, res) => {
@@ -54,6 +47,12 @@ app.post("/api/persons", async (req, res) => {
     return res.status(400).json({ message: "Name and number must exist." });
   }
   try {
+    const findPerson = await Person.findOne({ name: name });
+    console.log(findPerson, "F");
+
+    if (findPerson) {
+      return res.status(400).json({ message: "Contact Already Exists." });
+    }
     const addedContact = await Person.create({ name, number });
     return res.status(201).json(addedContact);
   } catch (error) {
@@ -61,16 +60,17 @@ app.post("/api/persons", async (req, res) => {
   }
 });
 //
-//
-//
 // Updating Number
 //
-app.put("/api/persons/:id", async (req, res) => {
+app.put("/api/persons/:id", async (req, res, next) => {
   if (!req.body.number) {
     return res.status(400).json({ message: "Number must exist." });
   }
   try {
     const itemFind = await Person.findById(req.params.id);
+    if (!itemFind) {
+      return res.status(404).json({ message: "No Contact Found." });
+    }
     await Person.findOneAndUpdate(
       {
         _id: itemFind._id,
@@ -83,21 +83,29 @@ app.put("/api/persons/:id", async (req, res) => {
       number: req.body.number,
     });
   } catch (error) {
-    return res.status(400).json({ message: "Bad request." });
+    next(error);
   }
 });
-//
 //
 // Removing Numbers
-app.delete("/api/persons/:id", async (req, res) => {
+app.delete("/api/persons/:id", async (req, res, next) => {
   try {
-    await Person.deleteOne({ _id: req.params.id });
-    return res.status(200).json({ message: "contact deleted." });
+    const itemFind = await Person.findById(req.params.id);
+    if (!itemFind) {
+      return res.status(404).json({ message: "No Item Found." });
+    } else {
+      await Person.deleteOne({ _id: req.params.id });
+      return res.status(204).end();
+    }
   } catch (error) {
-    return res.status(404).json({ message: "No contact found." });
+    next(error);
   }
 });
 //
+// Unknown Endpoint
+app.use((req, res) => {
+  return res.status(404).json({ message: "Unknown URL." });
+});
 //
 app.use(errorHandler);
 // Running the server.
