@@ -11,17 +11,10 @@ const PersonSchema = new mongoose.Schema({
     minLength: [8, "Number must at least be 8 characters"],
     validate: {
       validator: (v) => {
-        const finalString = v.split("-");
-        return (
-          v.includes("-") &&
-          finalString.length >= 2 &&
-          finalString[0].length >= 2 &&
-          /\d/.test(finalString[1]) &&
-          /\d/.test(finalString[0])
-        );
+        return /^\d{2,3}-\d{3,}$/.test(v);
       },
       message:
-        "Numbers Must be formed into two parts separated by '-', first part should also have 2-3 numbers at least, and second part should also contain a number or more.",
+        "Insert A proper number, use hyphen to separate it",
     },
   },
 });
