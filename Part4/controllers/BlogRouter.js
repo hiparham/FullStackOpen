@@ -2,13 +2,19 @@ const Blog = require("../models/BlogModel");
 const Router = require("express").Router();
 // Get All Blogs
 Router.get("/", async (req, res) => {
-  try {
-    const AllItems = await Blog.find({});
-    return res.json(AllItems);
-  } catch (error) {
-    console.log(error);
-    return res.status(501).json({ message: "Server Error" });
+  const AllItems = await Blog.find({});
+  if (!AllItems) {
+    return res.status(501).json({ message: "No posts yet" });
   }
+  return res.json(AllItems);
+});
+// Fetching A single blog
+Router.get("/:id", async (req, res) => {
+  const blogPost = await Blog.findById(req.params.id);
+  if (!blogPost) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+  return res.json(blogPost);
 });
 // Post A Blog
 Router.post("/", async (req, res, next) => {
@@ -18,9 +24,8 @@ Router.post("/", async (req, res, next) => {
     const submittedPost = await newBlog.save();
     return res.status(201).json(submittedPost);
   } catch (error) {
-    console.log("ERROR");
-
     next(error);
   }
 });
+//
 module.exports = Router;

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("express-async-errors");
 const BlogRouter = require("./controllers/BlogRouter");
 const { UnknownEndpoint, ErrorHandler } = require("./utils/middleware");
 const app = express();
