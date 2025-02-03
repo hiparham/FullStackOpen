@@ -1,3 +1,6 @@
+const UnknownEndpoint = (req, res) => {
+  return res.status(404).json({ message: "Unknown URL." });
+};
 const errorHandler = (error, req, res, next) => {
   if (error.name === "CastError")
     return res.status(404).json({ message: "Malformatted ID" });
@@ -11,4 +14,4 @@ const errorHandler = (error, req, res, next) => {
   next(error);
 };
 
-module.exports = { errorHandler };
+module.exports = { UnknownEndpoint, errorHandler };
