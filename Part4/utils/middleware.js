@@ -10,6 +10,8 @@ const ErrorHandler = (error, req, res, next) => {
         .map((x) => x.message)
         .join(" | "),
     });
+  } else if (error.name === "SyntaxError") {
+    return res.status(400).json({ message: "Bad request" });
   }
   next(error);
 };

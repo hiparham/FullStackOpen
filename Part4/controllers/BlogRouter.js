@@ -28,4 +28,19 @@ Router.post("/", async (req, res, next) => {
   }
 });
 //
+// Deleting A post
+Router.delete("/:id", async (req, res) => {
+  await Blog.findByIdAndDelete(req.params.id);
+  res.status(204).end();
+});
+// Editing A Post
+Router.put("/:id", async (req, res) => {
+  const updated = req.body;
+  const itemUpdated = await Blog.findByIdAndUpdate(req.params.id, updated, {
+    runValidators: true,
+    new: true,
+  });
+  return res.status(200).json(itemUpdated);
+});
+//
 module.exports = Router;

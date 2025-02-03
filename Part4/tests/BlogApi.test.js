@@ -6,6 +6,7 @@ const app = require("../app");
 const ConnectDb = require("../utils/ConnectDB");
 const api = supertest(app);
 const Blog = require("../models/BlogModel");
+const { GetAllPosts } = require("./test_helper");
 const initialBlogs = [
   {
     title: "mongoose errors explained",
@@ -16,6 +17,11 @@ const initialBlogs = [
     title: "mongoose guides",
     author: "mongoose docs",
     url: "https://mongoosejs.com/docs/guides.html",
+  },
+  {
+    title: "To be Deleted!",
+    author: "Nobody",
+    url: "Dummy URL",
   },
 ];
 //
@@ -76,6 +82,18 @@ test("LikesMissing", async () => {
 //
 test("MissingFields", async () => {
   await api.post("/api/blogs").send({ author: "Me" }).expect(400);
+});
+//
+test("Deleting A Resource", async () => {
+  const All = await GetAllPosts();
+  await api.delete(`/api/blogs/${All[2].id}`).expect(204);
+  const newAll = await GetAllPosts();
+  assert(All.length > newAll.length);
+});
+//
+test("Updating Likes", async () => {
+  const All = await GetAllPosts();
+  await api.put(`/api/blogs/${All[0].id}`).send({ likes: 5 }).expect(200);
 });
 //
 after(async () => {
