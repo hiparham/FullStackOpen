@@ -12,6 +12,13 @@ const ErrorHandler = (error, req, res, next) => {
     });
   } else if (error.name === "SyntaxError") {
     return res.status(400).json({ message: "Bad request" });
+  } else if (
+    error.name === "MongooseError" &&
+    error.message.includes("Username Exists")
+  ) {
+    return res.status(400).json({ message: "User Already Exists" });
+  } else if (error.name === "JsonWebTokenError") {
+    return res.status(401).json({ message: "Invalid Token" });
   }
   next(error);
 };

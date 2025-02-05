@@ -1,4 +1,5 @@
 const Blog = require("../models/BlogModel");
+const User = require("../models/User");
 const Router = require("express").Router();
 // Get All Blogs
 Router.get("/", async (req, res) => {
@@ -17,17 +18,20 @@ Router.get("/:id", async (req, res) => {
   return res.json(blogPost);
 });
 // Post A Blog
-Router.post("/", async (req, res, next) => {
-  const { title, url, author } = req.body;
-  const newBlog = new Blog({ title: title, url: url, author: author });
-  try {
-    const submittedPost = await newBlog.save();
-    return res.status(201).json(submittedPost);
-  } catch (error) {
-    next(error);
-  }
+Router.post("/", async (req, res) => {
+  const { title, url, author, user } = req.body;
+  const UserFound = await User.findById(user);
+  const newBlog = new Blog({
+    title: title,
+    url: url,
+    author: author,
+    user: UserFound._id,
+  });
+  const submittedPost = await newBlog.save();
+  UserFound.blogs = UserFound.blogs.concat(submittedPost._id);
+  await UserFound.save();
+  return res.status(201).json(submittedPost);
 });
-//
 // Deleting A post
 Router.delete("/:id", async (req, res) => {
   await Blog.findByIdAndDelete(req.params.id);
