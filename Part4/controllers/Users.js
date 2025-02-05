@@ -3,7 +3,12 @@ const bcrypt = require("bcrypt");
 const Router = require("express").Router();
 // Fetching Users
 Router.get("/", async (req, res) => {
-  const Users = await User.find({}).populate("blogs");
+  const Users = await User.find({}).populate("blogs", {
+    url: 1,
+    author: 1,
+    title: 1,
+    id: 1,
+  });
   if (Users.length > 0) {
     return res.json(Users);
   } else {

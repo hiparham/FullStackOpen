@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema({
     },
   ],
 });
-
+//
 UserSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = document._id.toString();
@@ -28,7 +28,7 @@ UserSchema.set("toJSON", {
     return returnedObject;
   },
 });
-
+//
 const User = mongoose.model("User", UserSchema);
-
+//
 module.exports = User;

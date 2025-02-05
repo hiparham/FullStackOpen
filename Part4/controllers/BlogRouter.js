@@ -1,9 +1,14 @@
 const Blog = require("../models/BlogModel");
 const User = require("../models/User");
 const Router = require("express").Router();
+const jwt = require("jsonwebtoken");
 // Get All Blogs
 Router.get("/", async (req, res) => {
-  const AllItems = await Blog.find({});
+  const AllItems = await Blog.find({}).populate("user", {
+    username: 1,
+    name: 1,
+    id: 1,
+  });
   if (!AllItems) {
     return res.status(501).json({ message: "No posts yet" });
   }
@@ -18,9 +23,23 @@ Router.get("/:id", async (req, res) => {
   return res.json(blogPost);
 });
 // Post A Blog
+// Extract Id
+const extractToken = (req) => {
+  const token = req.get("authorization");
+  if (token.includes("Bearer ")) {
+    return token.replace("Bearer ", "");
+  } else {
+    return null;
+  }
+};
 Router.post("/", async (req, res) => {
-  const { title, url, author, user } = req.body;
-  const UserFound = await User.findById(user);
+  const { title, url, author } = req.body;
+  const token = extractToken(req);
+  const jwtVerify = jwt.verify(token, process.env.JWT_SECRET);
+  if (!jwtVerify.id) {
+    return res.status(401).json({ message: "Invalid Token" });
+  }
+  const UserFound = await User.findById(jwtVerify.id);
   const newBlog = new Blog({
     title: title,
     url: url,
