@@ -22,4 +22,10 @@ const ErrorHandler = (error, req, res, next) => {
   }
   next(error);
 };
-module.exports = { ErrorHandler, UnknownEndpoint };
+const extractToken = (req, res, next) => {
+  const token = req.get("authorization");
+  req.token = token.includes("Bearer ") ? token.replace("Bearer ", "") : null;
+  console.log(req.token, "HAHA");
+  next();
+};
+module.exports = { ErrorHandler, UnknownEndpoint, extractToken };

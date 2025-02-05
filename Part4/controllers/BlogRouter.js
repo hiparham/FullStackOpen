@@ -23,19 +23,9 @@ Router.get("/:id", async (req, res) => {
   return res.json(blogPost);
 });
 // Post A Blog
-// Extract Id
-const extractToken = (req) => {
-  const token = req.get("authorization");
-  if (token.includes("Bearer ")) {
-    return token.replace("Bearer ", "");
-  } else {
-    return null;
-  }
-};
 Router.post("/", async (req, res) => {
   const { title, url, author } = req.body;
-  const token = extractToken(req);
-  const jwtVerify = jwt.verify(token, process.env.JWT_SECRET);
+  const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
   if (!jwtVerify.id) {
     return res.status(401).json({ message: "Invalid Token" });
   }
