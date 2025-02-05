@@ -43,6 +43,16 @@ Router.post("/", async (req, res) => {
 });
 // Deleting A post
 Router.delete("/:id", async (req, res) => {
+  const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
+  const userFound = await User.findById(jwtVerify.id);
+  const post = await Blog.findById(req.params.id);
+  const isLegit = post.user.toString() === userFound._id.toString();
+  if (!post || !userFound || !isLegit) {
+    return res
+      .status(400)
+      .json({ message: "Blogpost cannot be deleted | Unauthorized" });
+  }
+
   await Blog.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });
