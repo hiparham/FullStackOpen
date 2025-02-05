@@ -1,7 +1,6 @@
 const Blog = require("../models/BlogModel");
 const User = require("../models/User");
 const Router = require("express").Router();
-const jwt = require("jsonwebtoken");
 // Get All Blogs
 Router.get("/", async (req, res) => {
   const AllItems = await Blog.find({}).populate("user", {
@@ -25,11 +24,10 @@ Router.get("/:id", async (req, res) => {
 // Post A Blog
 Router.post("/", async (req, res) => {
   const { title, url, author } = req.body;
-  const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
-  if (!jwtVerify.id) {
-    return res.status(401).json({ message: "Invalid Token" });
+  const UserFound = await User.findById(req.user.id);
+  if (!UserFound) {
+    return res.status(401).json({ message: "Cannot Perform this action" });
   }
-  const UserFound = await User.findById(jwtVerify.id);
   const newBlog = new Blog({
     title: title,
     url: url,
@@ -43,8 +41,7 @@ Router.post("/", async (req, res) => {
 });
 // Deleting A post
 Router.delete("/:id", async (req, res) => {
-  const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
-  const userFound = await User.findById(jwtVerify.id);
+  const userFound = await User.findById(req.user.id);
   const post = await Blog.findById(req.params.id);
   const isLegit = post.user.toString() === userFound._id.toString();
   if (!post || !userFound || !isLegit) {
@@ -52,12 +49,17 @@ Router.delete("/:id", async (req, res) => {
       .status(400)
       .json({ message: "Blogpost cannot be deleted | Unauthorized" });
   }
-
   await Blog.findByIdAndDelete(req.params.id);
   res.status(204).end();
 });
 // Editing A Post
 Router.put("/:id", async (req, res) => {
+  const userFound = await User.findById(req.user.id);
+  const post = await Blog.findById(req.params.id);
+  const isLegit = post.user.toString() === userFound._id.toString();
+  if (!isLegit || !post) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   const updated = req.body;
   const itemUpdated = await Blog.findByIdAndUpdate(req.params.id, updated, {
     runValidators: true,

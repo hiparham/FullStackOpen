@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const UnknownEndpoint = (req, res) => {
   res.status(404).json({ message: "NOTHING FOUND" });
 };
@@ -23,8 +25,15 @@ const ErrorHandler = (error, req, res, next) => {
   next(error);
 };
 const extractToken = (req, res, next) => {
-  const token = req.get("authorization")
+  const token = req.get("authorization");
   req.token = token?.includes("Bearer ") ? token.replace("Bearer ", "") : null;
   next();
 };
-module.exports = { ErrorHandler, UnknownEndpoint, extractToken };
+const userExtractor = (req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT" || req.method==="DELETE") {
+    const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
+    req.user = jwtVerify;
+  }
+  next();
+};
+module.exports = { ErrorHandler, UnknownEndpoint, extractToken, userExtractor };
