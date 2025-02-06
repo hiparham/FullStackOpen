@@ -28,7 +28,7 @@ export default function App() {
   }
   //
   function addaPost(x) {
-    console.log(x);
+    setAllBlogs([...AllBlogs, x]);
   }
   //
   return (
@@ -43,7 +43,7 @@ export default function App() {
             </h1>
             <LogOut logout={logout} />
           </div>
-          <AddBlogPost postAdded={addaPost} />
+          <AddBlogPost postAdded={addaPost} info={userInfo} />
           <Blogposts posts={AllBlogs} />
         </section>
       )}
