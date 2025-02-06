@@ -1,7 +1,7 @@
 export default function Blogposts({ posts }) {
   return (
     <div>
-      <ul>
+      <ul className="mt-[2rem] flex flex-col gap-[2.5rem]">
         {posts.map(({ title, url, author }) => {
           return (
             <li key={title}>
