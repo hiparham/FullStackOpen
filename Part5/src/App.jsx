@@ -3,6 +3,7 @@ import { GetAllBlogs } from "./Helpers/BlogsHelper";
 import Blogposts from "./Components/Blogposts";
 import LoginForm from "./Components/LoginForm";
 import LogOut from "./Components/LogOut";
+import AddBlogPost from "./Components/AddBlogPost";
 
 export default function App() {
   const [userInfo, setuserInfo] = useState(
@@ -26,6 +27,10 @@ export default function App() {
     setuserInfo("");
   }
   //
+  function addaPost(x) {
+    console.log(x);
+  }
+  //
   return (
     <div className="pt-[5vh] max-w-screen-md mx-auto w-11/12">
       {!userInfo ? (
@@ -38,6 +43,7 @@ export default function App() {
             </h1>
             <LogOut logout={logout} />
           </div>
+          <AddBlogPost postAdded={addaPost} />
           <Blogposts posts={AllBlogs} />
         </section>
       )}
