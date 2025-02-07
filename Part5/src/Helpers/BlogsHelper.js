@@ -14,4 +14,22 @@ const addBlogPost = async (post, token) => {
   });
   return init.data;
 };
-export { GetAllBlogs, addBlogPost };
+//
+const likeBlogPost = async (id, update, token) => {
+  const init = await axios.put(Base_url + "/blogs" + "/" + id, update, {
+    headers: {
+      Authorization: extractToken(token),
+    },
+  });
+  return init.data;
+};
+//
+const deleteBlogPost = async (id, token) => {
+  const init = await axios.delete(Base_url + "/blogs" + "/" + id, {
+    headers: {
+      Authorization: extractToken(token),
+    },
+  });
+  return init;
+};
+export { GetAllBlogs, addBlogPost, likeBlogPost,deleteBlogPost };

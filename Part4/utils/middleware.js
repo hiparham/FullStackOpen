@@ -30,9 +30,11 @@ const extractToken = (req, res, next) => {
   next();
 };
 const userExtractor = (req, res, next) => {
-  if (req.method === "POST" || req.method === "PUT" || req.method==="DELETE") {
+  if (req.method !== "GET") {
     const jwtVerify = jwt.verify(req.token, process.env.JWT_SECRET);
     req.user = jwtVerify;
+  } else {
+    req.user = null;
   }
   next();
 };

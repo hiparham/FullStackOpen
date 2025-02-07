@@ -1,4 +1,5 @@
-export default function LogOut({logout}) {
+import PropTypes from "prop-types";
+export default function LogOut({ logout }) {
   return (
     <button
       onClick={logout}
@@ -8,3 +9,6 @@ export default function LogOut({logout}) {
     </button>
   );
 }
+LogOut.propTypes = {
+  logout: PropTypes.func,
+};

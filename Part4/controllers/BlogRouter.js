@@ -41,30 +41,31 @@ Router.post("/", async (req, res) => {
 });
 // Deleting A post
 Router.delete("/:id", async (req, res) => {
-  const userFound = await User.findById(req.user.id);
   const post = await Blog.findById(req.params.id);
+  const userFound = await User.findById(req.user.id);
   const isLegit = post.user.toString() === userFound._id.toString();
-  if (!post || !userFound || !isLegit) {
-    return res
-      .status(400)
-      .json({ message: "Blogpost cannot be deleted | Unauthorized" });
+  if (isLegit) {
+    await Blog.findByIdAndDelete(req.params.id);
+    return res.status(204).end();
+  } else {
+    return res.status(401).json({ message: "Unauthorized" });
   }
-  await Blog.findByIdAndDelete(req.params.id);
-  res.status(204).end();
 });
 // Editing A Post
 Router.put("/:id", async (req, res) => {
   const userFound = await User.findById(req.user.id);
   const post = await Blog.findById(req.params.id);
-  const isLegit = post.user.toString() === userFound._id.toString();
-  if (!isLegit || !post) {
+  if (!userFound || !post) {
     return res.status(401).json({ message: "Unauthorized" });
   }
-  const updated = req.body;
-  const itemUpdated = await Blog.findByIdAndUpdate(req.params.id, updated, {
-    runValidators: true,
-    new: true,
-  });
+  const itemUpdated = await Blog.findByIdAndUpdate(
+    req.params.id,
+    { likes: req.body.likes },
+    {
+      runValidators: true,
+      new: true,
+    }
+  );
   return res.status(200).json(itemUpdated);
 });
 //

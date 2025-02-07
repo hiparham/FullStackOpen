@@ -4,7 +4,7 @@ import Blogposts from "./Components/Blogposts";
 import LoginForm from "./Components/LoginForm";
 import LogOut from "./Components/LogOut";
 import AddBlogPost from "./Components/AddBlogPost";
-
+import Welcome from "./Components/Welcome";
 export default function App() {
   const [userInfo, setuserInfo] = useState(
     JSON.parse(localStorage.getItem("BlogAuth")) || ""
@@ -13,7 +13,8 @@ export default function App() {
   //
   useEffect(() => {
     GetAllBlogs().then((data) => {
-      setAllBlogs(data);
+      const sortedData = data.sort((a, b) => b.likes - a.likes);
+      setAllBlogs(sortedData);
     });
   }, []);
   //
@@ -31,6 +32,16 @@ export default function App() {
     setAllBlogs([...AllBlogs, x]);
   }
   //
+  function updateLikes(x) {
+    const updateditem = x;
+    setAllBlogs((old) =>
+      old.map((p) => (p.id !== updateditem.id ? p : updateditem))
+    );
+  }
+  //
+  function deletePost(x) {
+    setAllBlogs((old) => old.filter((p) => p.id !== x));
+  }
   return (
     <div className="pt-[5vh] max-w-screen-md mx-auto w-11/12">
       {!userInfo ? (
@@ -38,13 +49,15 @@ export default function App() {
       ) : (
         <section>
           <div className="flex items-center gap-[.5rem]">
-            <h1 className="text-2xl text-blue-700">
-              Hello {userInfo.name.toUpperCase()}
-            </h1>
+            <Welcome userInfo={userInfo.name} />
             <LogOut logout={logout} />
           </div>
           <AddBlogPost postAdded={addaPost} info={userInfo} />
-          <Blogposts posts={AllBlogs} />
+          <Blogposts
+            posts={AllBlogs}
+            updateLikes={updateLikes}
+            postDel={deletePost}
+          />
         </section>
       )}
     </div>
