@@ -11,7 +11,7 @@ export default function Blogpost({ post, updateLikes, postDel }) {
       const init = await likeBlogPost(id, { likes: likes }, currentToken);
       updateLikes(init);
     } catch (error) {
-      console.log("ERROR");
+      console.log("ERROR", error);
     }
   }
   async function deletePost() {
@@ -20,7 +20,7 @@ export default function Blogpost({ post, updateLikes, postDel }) {
       const init = await deleteBlogPost(id, currentToken);
       postDel(id);
     } catch (error) {
-      console.log("ERROR");
+      console.log("ERROR", error);
     }
   }
   return (

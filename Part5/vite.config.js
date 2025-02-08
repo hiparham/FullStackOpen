@@ -13,4 +13,8 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    setupFiles: "./testBase.js",
+    environment: "jsdom",
+  },
 });

@@ -35,6 +35,7 @@ export default [
       ],
       eqeqeq: 2,
       "no-console": 2,
+      "react/prop-types": 0,
     },
   },
 ];
