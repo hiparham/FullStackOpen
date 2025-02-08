@@ -25,7 +25,7 @@ export default function AddBlogPost({ postAdded, info }) {
       setAuthor("");
       setShowForm(false);
     } catch (error) {
-      setError("Post could not be created");
+      setError("Post could not be created", error);
       setTimeout(() => {
         setError("");
       }, 2000);
