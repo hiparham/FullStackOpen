@@ -10,7 +10,7 @@ export default function LoginForm({ setuserinfo }) {
     try {
       const { data } = await loginUser({ username, password });
       setuserinfo(data);
-    } catch () {
+    } catch {
       setErr("Wrong User Or Password");
       setTimeout(() => {
         setErr("");
