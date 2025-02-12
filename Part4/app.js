@@ -14,7 +14,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(extractToken);
-app.use("/api/blogs", userExtractor,BlogRouter);
+
+if (process.env.NODE_ENV === "test") {
+  const PlaywrightTest = require("./controllers/PlaywrightReset");
+  app.use("/api/reset", PlaywrightTest);
+}
+
+app.use("/api/blogs", userExtractor, BlogRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use(UnknownEndpoint);
