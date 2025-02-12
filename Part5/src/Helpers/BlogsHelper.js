@@ -32,4 +32,4 @@ const deleteBlogPost = async (id, token) => {
   });
   return init;
 };
-export { GetAllBlogs, addBlogPost, likeBlogPost,deleteBlogPost };
+export { GetAllBlogs, addBlogPost, likeBlogPost, deleteBlogPost };

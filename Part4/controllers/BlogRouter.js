@@ -60,9 +60,8 @@ Router.put("/:id", async (req, res) => {
   }
   const itemUpdated = await Blog.findByIdAndUpdate(
     req.params.id,
-    { likes: req.body.likes },
+    { likes: post.likes + 1 },
     {
-      runValidators: true,
       new: true,
     }
   );

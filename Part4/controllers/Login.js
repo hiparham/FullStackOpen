@@ -9,7 +9,6 @@ Router.post("/", async (req, res) => {
   const passwordHash = !(user && password)
     ? false
     : await bcrypt.compare(password, user.passwordHash);
-  console.log(passwordHash, "AYO");
 
   if (!passwordHash) {
     return res.status(401).json({ message: "Invalid Username Or Password" });

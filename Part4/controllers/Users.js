@@ -15,6 +15,12 @@ Router.get("/", async (req, res) => {
     return res.status(404).json({ message: "No User Found" });
   }
 });
+
+Router.get("/:id", async (req, res) => {
+  const foundUser = await User.findById(req.params.id);
+  return res.json(foundUser);
+});
+
 // Creating A New User
 Router.post("/", async (req, res) => {
   const { username, name, password } = req.body;
