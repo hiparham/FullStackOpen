@@ -5,22 +5,25 @@ import {
   noteAdded,
   noteFailed,
 } from "../reducers/NotificationReducer";
+import { postAnecdote } from "../reducers/Helpers";
 
 export default function NewAnecdote() {
   const dispatch = useDispatch();
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const value = e.target.anecdote.value;
     if (value.length < 3) {
       dispatch(noteFailed("Anecdote must be 3+ characters long"));
       return;
     }
-    dispatch(addAnecdote(value));
-    dispatch(noteAdded(`${value} added`));
+    const init = await postAnecdote(value);
+    dispatch(addAnecdote(init));
+    dispatch(noteAdded(`${init.content} just added!`));
     setTimeout(() => {
       dispatch(cleanUp());
     }, 2000);
     e.target.reset();
+    e.target.blur();
   }
   return (
     <form onSubmit={handleSubmit}>

@@ -1,22 +1,14 @@
-import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+const base = "http://localhost:3001/anecdotes";
 
-const generateId = () => uuidv4();
-
-
-const AddAnecdote = (content) => {
-  return {
-    type: "Add_Anecdote",
-    payload: {
-      content,
-    },
-  };
+const getAllAnecdotes = async () => {
+  const init = await axios.get(base);
+  return init.data;
 };
 
-const FilterValue = (word) => {
-  return {
-    type: "Set_filter",
-    payload: word,
-  };
+const postAnecdote = async (content) => {
+  const init = await axios.post(base, { content, important: false });
+  return init.data;
 };
 
-export { generateId, AddAnecdote, FilterValue };
+export { getAllAnecdotes, postAnecdote };

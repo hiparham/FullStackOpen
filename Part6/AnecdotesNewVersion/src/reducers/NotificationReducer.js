@@ -13,7 +13,6 @@ const NotificationReducer = createSlice({
     notifVote(state, action) {
       return { text: `You voted ${action.payload}`, type: "vote" };
     },
-
     cleanUp() {
       return "";
     },
