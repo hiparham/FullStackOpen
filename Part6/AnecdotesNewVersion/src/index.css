@@ -1,0 +1,14 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-block: 1rem;
+}
+li {
+  list-style: none;
+}

@@ -2,9 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 
 const generateId = () => uuidv4();
 
-const setVote = (x) => {
-  return { type: "Vote", id: x };
-};
 
 const AddAnecdote = (content) => {
   return {
@@ -22,4 +19,4 @@ const FilterValue = (word) => {
   };
 };
 
-export { generateId, setVote, AddAnecdote, FilterValue };
+export { generateId, AddAnecdote, FilterValue };

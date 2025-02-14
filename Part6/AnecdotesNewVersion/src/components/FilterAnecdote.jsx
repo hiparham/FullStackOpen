@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
-import { FilterValue } from "../reducers/Helpers";
+import { filteranecdotes } from "../reducers/FilterAnecdote";
 
 export default function FilterAnecdote() {
   const dispatch = useDispatch();
   function handleChange(e) {
     const value = e.target.value;
-    dispatch(FilterValue(value));
+    dispatch(filteranecdotes(value));
   }
   return (
     <form onChange={handleChange}>
