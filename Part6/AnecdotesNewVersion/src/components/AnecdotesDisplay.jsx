@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addVote } from "../reducers/Anecdotesreducer";
-import { cleanUp, notifVote } from "../reducers/NotificationReducer";
+import { submitVote } from "../reducers/Anecdotesreducer";
+
 export default function AnecdotesDisplay() {
   const AllAnecdotes = useSelector((state) => {
     if (state.Filter.length < 2) {
@@ -15,6 +15,11 @@ export default function AnecdotesDisplay() {
     .sort((a, b) => b.votes - a.votes);
 
   const dispatch = useDispatch();
+  
+  const uptove = (x) => {
+    const item = AllAnecdotes.find((anecdote) => anecdote.id === x);
+    dispatch(submitVote(x, { ...item, votes: item.votes + 1 }));
+  };
 
   return (
     <div>
@@ -23,15 +28,7 @@ export default function AnecdotesDisplay() {
           return (
             <li key={anecdote.id}>
               <p>{anecdote.content}</p>
-              <button
-                onClick={() => {
-                  dispatch(addVote(anecdote.id));
-                  dispatch(notifVote(anecdote.content));
-                  setTimeout(() => {
-                    dispatch(cleanUp());
-                  }, 5000);
-                }}
-              >
+              <button onClick={() => uptove(anecdote.id)}>
                 Votes {anecdote.votes}
               </button>
             </li>
