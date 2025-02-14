@@ -1,4 +1,3 @@
-import { createStore } from "redux";
 import { generateId } from "./Helpers";
 
 const anecdotesAtStart = [
@@ -34,6 +33,4 @@ const AnecdotesReducer = (state = initialAnecdotes, action) => {
   return state;
 };
 
-const AnecdoteStore = createStore(AnecdotesReducer);
-
-export default AnecdoteStore;
+export default AnecdotesReducer;

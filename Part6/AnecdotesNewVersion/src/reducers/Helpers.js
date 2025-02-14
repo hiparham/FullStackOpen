@@ -14,4 +14,12 @@ const AddAnecdote = (content) => {
     },
   };
 };
-export { generateId, setVote,AddAnecdote };
+
+const FilterValue = (word) => {
+  return {
+    type: "Set_filter",
+    payload: word,
+  };
+};
+
+export { generateId, setVote, AddAnecdote, FilterValue };
