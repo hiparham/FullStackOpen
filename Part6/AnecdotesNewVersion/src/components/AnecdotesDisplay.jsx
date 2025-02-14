@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { submitVote } from "../reducers/Anecdotesreducer";
+import { sendNotification } from "../reducers/NotificationReducer";
 
 export default function AnecdotesDisplay() {
   const AllAnecdotes = useSelector((state) => {
@@ -15,10 +16,11 @@ export default function AnecdotesDisplay() {
     .sort((a, b) => b.votes - a.votes);
 
   const dispatch = useDispatch();
-  
+
   const uptove = (x) => {
     const item = AllAnecdotes.find((anecdote) => anecdote.id === x);
     dispatch(submitVote(x, { ...item, votes: item.votes + 1 }));
+    dispatch(sendNotification(`You voted "${item.content}"`, "vote", 5));
   };
 
   return (

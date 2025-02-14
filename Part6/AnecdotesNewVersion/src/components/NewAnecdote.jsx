@@ -1,10 +1,6 @@
 import { useDispatch } from "react-redux";
 import { newAnecdote } from "../reducers/Anecdotesreducer";
-import {
-  cleanUp,
-  noteAdded,
-  noteFailed,
-} from "../reducers/NotificationReducer";
+import { sendNotification } from "../reducers/NotificationReducer";
 
 export default function NewAnecdote() {
   const dispatch = useDispatch();
@@ -12,10 +8,11 @@ export default function NewAnecdote() {
     e.preventDefault();
     const value = e.target.anecdote.value;
     if (value.length < 3) {
-      dispatch(noteFailed("Anecdote must be 3+ characters long"));
+      dispatch(sendNotification(`Make your anecdote longer!!`, "alert", 2));
       return;
     }
     dispatch(newAnecdote(value));
+    dispatch(sendNotification(`${value} Added!`, "success", 1.5));
   }
   return (
     <form onSubmit={handleSubmit}>

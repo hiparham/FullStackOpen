@@ -18,6 +18,23 @@ const NotificationReducer = createSlice({
     },
   },
 });
-export default NotificationReducer.reducer;
+const { noteAdded, cleanUp, noteFailed, notifVote } =
+  NotificationReducer.actions;
 
-export const { noteAdded, cleanUp, noteFailed,notifVote } = NotificationReducer.actions;
+export default NotificationReducer.reducer;
+export const sendNotification = (text, type, time) => {
+  return (dispatch) => {
+    dispatch(
+      type === "success"
+        ? noteAdded(text)
+        : type === "alert"
+        ? noteFailed(text)
+        : type === "vote"
+        ? notifVote(text)
+        : ""
+    );
+    setTimeout(() => {
+      dispatch(cleanUp());
+    }, time * 1000);
+  };
+};
