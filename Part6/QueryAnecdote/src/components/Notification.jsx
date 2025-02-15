@@ -1,18 +1,14 @@
+import { useContext } from "react";
+import AnecdoteContext from "../AnecdoteContext";
+
 const Notification = () => {
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1,
-    marginBottom: 5
+  const {
+    state: { notification },
+  } = useContext(AnecdoteContext);
+  if (!notification) {
+    return null;
   }
-  
-  if (true) return null
+  return <div>{notification}</div>;
+};
 
-  return (
-    <div style={style}>
-      
-    </div>
-  )
-}
-
-export default Notification
+export default Notification;

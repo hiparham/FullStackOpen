@@ -2,8 +2,11 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getAllItems, voteItem } from "./helpers";
+import { useContext } from "react";
+import AnecdoteContext from "./AnecdoteContext";
 const App = () => {
   const queryClient = useQueryClient();
+  const { dispatch } = useContext(AnecdoteContext);
   const { data, isPending, isError } = useQuery({
     queryKey: ["Anecdotes"],
     queryFn: getAllItems,
@@ -15,14 +18,19 @@ const App = () => {
     mutationFn: voteItem,
     onSuccess: (newItem) => {
       const allNotes = queryClient.getQueryData(["Anecdotes"]);
+      dispatch({
+        type: "Notification",
+        payload: `You voted ${newItem.content}`,
+      });
+      setTimeout(() => {
+        dispatch({ type: "CleanUp" });
+      }, 2000);
       queryClient.setQueryData(
         ["Anecdotes"],
         allNotes.map((x) => (x.id === newItem.id ? newItem : x))
       );
     },
   });
-
-  console.log("Hi");
 
   const handleVote = (anecdote) => {
     voteMutation.mutate(anecdote);
