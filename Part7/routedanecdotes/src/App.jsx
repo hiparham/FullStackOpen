@@ -92,9 +92,9 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const content = useField("content");
-  const author = useField("author");
-  const info = useField("info");
+  const content = useField("content", "text");
+  const author = useField("author", "text");
+  const info = useField("info", "text");
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
