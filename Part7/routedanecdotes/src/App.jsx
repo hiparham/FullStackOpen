@@ -7,6 +7,7 @@ import {
   useNavigate,
   useParams,
 } from "react-router";
+import useField from "./hooks/useAnecdotecreate";
 
 const Notification = ({ notif, set }) => {
   useEffect(() => {
@@ -91,51 +92,46 @@ const Footer = () => (
 );
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const content = useField("content");
+  const author = useField("author");
+  const info = useField("info");
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
-    props.set(`A new Anecdote ${content} Created!!!`);
+    props.set(`A new Anecdote ${content.value} Created!!!`);
     navigate("/");
   };
-
+  function resetForm() {
+    content.onReset();
+    author.onReset();
+    info.onReset();
+  }
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...content} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">Create</button>
+        <button type="button" onClick={resetForm}>
+          Reset
+        </button>
       </form>
     </div>
   );
@@ -146,11 +142,13 @@ const Anecdote = ({ anecdotes }) => {
   const anecdote = anecdotes.find((x) => x.id === +id);
   return (
     <div>
-      <h1>{anecdote.content}</h1>
+      <h1>
+        {anecdote.content} By {anecdote.author}
+      </h1>
       <p>Has {anecdote.votes} Votes.</p>
       <p>
         For More Info,{" "}
-        <a href={anecdote.info} target="_blank">
+        <a href={anecdote.info} target="_blank" rel="noreferrer">
           Click Here
         </a>
       </p>
