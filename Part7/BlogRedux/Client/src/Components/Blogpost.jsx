@@ -2,6 +2,7 @@ import { useState } from "react";
 import Heart from "../assets/heart.svg";
 import { deleteBlogPost, likeBlogPost } from "../Helpers/BlogsHelper";
 export default function Blogpost({ post, updateLikes, postDel }) {
+  if (!post) return null;
   const [show, setShow] = useState(false);
   const currentUser =
     JSON.parse(localStorage.getItem("BlogAuth")).username || "";

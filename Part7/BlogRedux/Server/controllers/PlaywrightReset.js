@@ -2,8 +2,6 @@ const router = require("express").Router();
 const User = require("../models/User");
 const Blog = require("../models/BlogModel");
 
-
-
 router.get("/", (req, res) => {
   return res.status(200).json({ message: "FUCK" });
 });

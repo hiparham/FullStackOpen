@@ -1,19 +1,32 @@
 import { useState } from "react";
 import { loginUser } from "../Helpers/loginHelper";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  errorNotif,
+  successNotif,
+  cleanUp,
+  showSignup,
+  showApp,
+} from "../store/BlogStore";
 
 export default function LoginForm({ setuserinfo }) {
-  const [err, setErr] = useState("");
+  const notification = useSelector((state) => state.Notification);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
   async function handleLogin(e) {
     e.preventDefault();
     try {
       const { data } = await loginUser({ username, password });
-      setuserinfo(data);
-    } catch {
-      setErr("Wrong User Or Password");
+      dispatch(successNotif(`${data.username} Welcome`));
       setTimeout(() => {
-        setErr("");
+        setuserinfo(data);
+        dispatch(showApp());
+      }, 1500);
+    } catch {
+      dispatch(errorNotif("Something Went Wrong"));
+      setTimeout(() => {
+        dispatch(cleanUp());
       }, 2000);
     }
   }
@@ -23,9 +36,13 @@ export default function LoginForm({ setuserinfo }) {
       className="shadow-md flex flex-col gap-[1.2rem] p-8 mx-auto"
     >
       <h1 className="text-center font-semibold">Please Log In | BlogApp</h1>
-      {err && (
-        <p className="text-white py-2 bg-red-500 text-center px-1 my-[1rem]">
-          {err}
+      {notification && (
+        <p
+          className={`py-2 text-center text-white ${
+            notification.success ? "bg-emerald-400" : "bg-red-500"
+          }`}
+        >
+          {notification.text}
         </p>
       )}
       <input
@@ -47,6 +64,15 @@ export default function LoginForm({ setuserinfo }) {
         className="bg-black py-3 rounded-md text-white cursor-pointer"
       >
         Login
+      </button>
+      <button
+        type="button"
+        className="text-left cursor-pointer text-blue-700"
+        onClick={() => {
+          dispatch(showSignup());
+        }}
+      >
+        Don&apos;t have an account? Sign Up!
       </button>
     </form>
   );

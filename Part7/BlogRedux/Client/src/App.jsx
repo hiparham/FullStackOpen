@@ -1,21 +1,23 @@
 import { useEffect, useState } from "react";
 import { GetAllBlogs } from "./Helpers/BlogsHelper";
-import Blogposts from "./Components/Blogposts";
 import LoginForm from "./Components/LoginForm";
-import LogOut from "./Components/LogOut";
-import AddBlogPost from "./Components/AddBlogPost";
-import Welcome from "./Components/Welcome";
+import { useSelector } from "react-redux";
+import Signup from "./Components/Signup";
+import BlogAppcontainer from "./Components/BlogAppcontainer";
 export default function App() {
+  const status = useSelector((state) => state.status);
   const [userInfo, setuserInfo] = useState(
     JSON.parse(localStorage.getItem("BlogAuth")) || ""
   );
   const [AllBlogs, setAllBlogs] = useState([]);
-  //
   useEffect(() => {
-    GetAllBlogs().then((data) => {
-      const sortedData = data.sort((a, b) => b.likes - a.likes);
-      setAllBlogs(sortedData);
-    });
+    GetAllBlogs()
+      .then((data) => {
+        const sortedData = data.sort((a, b) => b.likes - a.likes);
+        setAllBlogs(sortedData);
+      })
+      .catch(() => {
+      });
   }, []);
   //
   function getUserInfo(x) {
@@ -44,22 +46,18 @@ export default function App() {
   }
   return (
     <div className="pt-[5vh] max-w-screen-md mx-auto w-11/12">
-      {!userInfo ? (
+      {status === "login" && (
         <LoginForm userInfo={userInfo} setuserinfo={getUserInfo} />
-      ) : (
-        <section>
-          <div className="flex items-center gap-[.5rem]">
-            <Welcome userInfo={userInfo.name} />
-            <LogOut logout={logout} />
-          </div>
-          <AddBlogPost postAdded={addaPost} info={userInfo} />
-          <Blogposts
-            posts={AllBlogs}
-            updateLikes={updateLikes}
-            postDel={deletePost}
-          />
-        </section>
       )}
+      {status === "signup" && <Signup />}
+      <BlogAppcontainer
+        userInfo={userInfo}
+        addaPost={addaPost}
+        logout={logout}
+        updateLikes={updateLikes}
+        deletePost={deletePost}
+        AllBlogs={AllBlogs}
+      />
     </div>
   );
 }
