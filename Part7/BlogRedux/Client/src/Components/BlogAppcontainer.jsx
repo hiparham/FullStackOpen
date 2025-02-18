@@ -1,8 +1,10 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Welcome from "./Welcome";
 import LogOut from "./LogOut";
 import AddBlogPost from "./AddBlogPost";
-import Blogpost from "./Blogpost";
+import { useEffect } from "react";
+import { fetchallposts } from "../store/BlogStore";
+import Blogposts from "./Blogposts";
 
 export default function BlogAppcontainer({
   userInfo,
@@ -10,10 +12,16 @@ export default function BlogAppcontainer({
   logout,
   updateLikes,
   deletePost,
-  AllBlogs,
 }) {
+  const data = useSelector((state) => state.blogposts);
   const status = useSelector((state) => state.status);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchallposts());
+  }, []);
+
   if (status !== "app") return null;
+
   return (
     <section>
       <div className="flex items-center gap-[.5rem]">
@@ -21,8 +29,8 @@ export default function BlogAppcontainer({
         <LogOut logout={logout} />
       </div>
       <AddBlogPost postAdded={addaPost} info={userInfo} />
-      <Blogpost
-        posts={AllBlogs}
+      <Blogposts
+        posts={data}
         updateLikes={updateLikes}
         postDel={deletePost}
       />

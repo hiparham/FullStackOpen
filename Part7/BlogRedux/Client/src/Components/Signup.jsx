@@ -14,6 +14,8 @@ export default function Signup() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const status = useSelector((state) => state.status);
+  if (status !== "signup") return null;
   async function handleSignup(e) {
     e.preventDefault();
     try {

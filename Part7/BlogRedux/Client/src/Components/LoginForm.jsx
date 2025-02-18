@@ -10,6 +10,7 @@ import {
 } from "../store/BlogStore";
 
 export default function LoginForm({ setuserinfo }) {
+  const status = useSelector((state) => state.status);
   const notification = useSelector((state) => state.Notification);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +31,7 @@ export default function LoginForm({ setuserinfo }) {
       }, 2000);
     }
   }
+  if (status !== "login") return null;
   return (
     <form
       onSubmit={handleLogin}

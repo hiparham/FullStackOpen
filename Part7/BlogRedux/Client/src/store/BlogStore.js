@@ -1,5 +1,16 @@
 import { configureStore, createSlice } from "@reduxjs/toolkit";
 import SignUpUser from "../Helpers/SignupHelper";
+import { GetAllBlogs } from "../Helpers/BlogsHelper";
+
+const Blogpostreducer = createSlice({
+  name: "BlogPost",
+  initialState: [],
+  reducers: {
+    getAll(state, action) {
+      return action.payload;
+    },
+  },
+});
 
 const NotificationSlice = createSlice({
   name: "Notif",
@@ -19,7 +30,9 @@ const NotificationSlice = createSlice({
 
 const appStatus = createSlice({
   name: "status",
-  initialState: "app",
+  initialState: JSON.parse(localStorage.getItem("BlogAuth"))?.username
+    ? "app"
+    : "login",
   reducers: {
     showApp() {
       return "app";
@@ -50,16 +63,25 @@ export const signUp = (usercredentials) => {
   };
 };
 
+export const fetchallposts = () => {
+  return async (dispatch) => {
+    const init = await GetAllBlogs();
+    dispatch(getAll(init));
+  };
+};
+
 const BlogStore = configureStore({
   reducer: {
     status: appStatus.reducer,
     Notification: NotificationSlice.reducer,
     auth: authActions.reducer,
+    blogposts: Blogpostreducer.reducer,
   },
 });
 
 export const { signup } = authActions.actions;
 export const { successNotif, errorNotif, cleanUp } = NotificationSlice.actions;
 export const { showApp, showLogin, showSignup } = appStatus.actions;
+export const { getAll } = Blogpostreducer.actions;
 
 export default BlogStore;
