@@ -1,5 +1,11 @@
 import PropTypes from "prop-types";
-export default function LogOut({ logout }) {
+import { useContext } from "react";
+import { BlogContext } from "../BlogAppContext";
+export default function LogOut() {
+  const dispatch = useContext(BlogContext).dispatch;
+  const logout = () => {
+    dispatch({ type: "logout" });
+  };
   return (
     <button
       onClick={logout}

@@ -1,12 +1,26 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-export default function AddBlogPost({ postAdded }) {
+import { addBlogPost } from "../Helpers/BlogsHelper";
+export default function AddBlogPost() {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [author, setAuthor] = useState("");
+  const queryclient = useQueryClient();
+  const postAdd = useMutation({
+    mutationFn: addBlogPost,
+    onSuccess: () => {
+      queryclient.invalidateQueries(["Blog"]);
+    },
+  });
+  //
+  function addaPost(x) {
+    postAdd.mutate(x);
+  }
+  //
   function sendPost(e) {
     e.preventDefault();
-    postAdded({ title, url, author });
+    addaPost({ title, url, author });
     setTitle("");
     setAuthor("");
     setUrl("");

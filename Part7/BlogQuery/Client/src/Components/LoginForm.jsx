@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { loginUser } from "../Helpers/loginHelper";
+import { useContext } from "react";
+import { BlogContext } from "../BlogAppContext";
 
-export default function LoginForm({ setuserinfo }) {
+export default function LoginForm() {
+  const dispatch = useContext(BlogContext).dispatch;
   const [err, setErr] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -9,7 +12,7 @@ export default function LoginForm({ setuserinfo }) {
     e.preventDefault();
     try {
       const { data } = await loginUser({ username, password });
-      setuserinfo(data);
+      dispatch({ type: "login", payload: data });
     } catch {
       setErr("Wrong User Or Password");
       setTimeout(() => {

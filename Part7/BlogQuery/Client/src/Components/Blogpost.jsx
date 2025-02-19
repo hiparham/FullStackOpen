@@ -1,16 +1,15 @@
 import { useState } from "react";
 import Heart from "../assets/heart.svg";
+import { useContext } from "react";
+import { BlogContext } from "../BlogAppContext";
 export default function Blogpost({ post, updateLikes, postDel }) {
+  const currentUser = useContext(BlogContext).state?.userInfo?.username;
   const [show, setShow] = useState(false);
-  const currentUser =
-    JSON.parse(localStorage.getItem("BlogAuth")).username || "";
-
   function likePost() {
     updateLikes(post);
   }
-  async function deletePost() {
-    const id = post.id;
-    postDel(id);
+  function deletePost() {
+    postDel(post.id);
   }
   return (
     <li key={post.title}>
