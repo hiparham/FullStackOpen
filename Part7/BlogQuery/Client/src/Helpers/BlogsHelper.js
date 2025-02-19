@@ -5,6 +5,10 @@ const GetAllBlogs = async () => {
   const posts = await axios.get(Base_url + "/" + "blogs");
   return posts.data;
 };
+const getSingleBlog = async (id) => {
+  const post = await axios.get(Base_url + "/" + "blogs/" + id);
+  return post.data;
+};
 //
 const addBlogPost = async (post) => {
   const init = await axios.post(Base_url + "/blogs", post, {
@@ -32,4 +36,10 @@ const deleteBlogPost = async (id) => {
   });
   return init;
 };
-export { GetAllBlogs, addBlogPost, likeBlogPost, deleteBlogPost };
+export {
+  GetAllBlogs,
+  addBlogPost,
+  likeBlogPost,
+  deleteBlogPost,
+  getSingleBlog,
+};
