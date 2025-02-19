@@ -14,3 +14,5 @@
 
 [Part6: Advanced State Management](https://github.com/hiparham/FullStackOpen/tree/main/Part6) 
 
+[Part7: React Router, Custom Hooks, Styling, and Webpack](https://github.com/hiparham/FullStackOpen/tree/main/Part7) 
+
