@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { BlogContext } from "../BlogAppContext";
 
 export default function LoginForm() {
-  const dispatch = useContext(BlogContext).dispatch;
+  const dispatch = useContext(BlogContext).dispatchblogauth;
   const [err, setErr] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,6 +21,7 @@ export default function LoginForm() {
     }
   }
   return (
+    
     <form
       onSubmit={handleLogin}
       className="shadow-md flex flex-col gap-[1.2rem] p-8 mx-auto"

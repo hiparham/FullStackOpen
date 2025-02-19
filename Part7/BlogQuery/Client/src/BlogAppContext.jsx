@@ -1,11 +1,11 @@
 import { useReducer } from "react";
 import { createContext } from "react";
 
-const initial = {
+const authinitial = {
   userInfo: JSON.parse(localStorage.getItem("BlogAuth")) || "",
 };
 
-function BlogReducer(state, action) {
+function BlogauthReducer(state, action) {
   switch (action.type) {
     case "login": {
       localStorage.setItem("BlogAuth", JSON.stringify(action.payload));
@@ -16,7 +16,7 @@ function BlogReducer(state, action) {
       return { ...state, userInfo: "" };
     }
     default: {
-      return initial;
+      return authinitial;
     }
   }
 }
@@ -24,9 +24,9 @@ function BlogReducer(state, action) {
 const BlogContext = createContext();
 
 export default function BlogAppContext({ children }) {
-  const [state, dispatch] = useReducer(BlogReducer, initial);
+  const [blogauth, dispatchblogauth] = useReducer(BlogauthReducer, authinitial);
   return (
-    <BlogContext.Provider value={{ state, dispatch }}>
+    <BlogContext.Provider value={{ blogauth, dispatchblogauth }}>
       {children}
     </BlogContext.Provider>
   );

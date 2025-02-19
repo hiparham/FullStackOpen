@@ -3,7 +3,7 @@ import Heart from "../assets/heart.svg";
 import { useContext } from "react";
 import { BlogContext } from "../BlogAppContext";
 export default function Blogpost({ post, updateLikes, postDel }) {
-  const currentUser = useContext(BlogContext).state?.userInfo?.username;
+  const currentUser = useContext(BlogContext).blogauth?.userInfo?.username;
   const [show, setShow] = useState(false);
   function likePost() {
     updateLikes(post);
