@@ -6,28 +6,28 @@ const GetAllBlogs = async () => {
   return posts.data;
 };
 //
-const addBlogPost = async (post, token) => {
+const addBlogPost = async (post) => {
   const init = await axios.post(Base_url + "/blogs", post, {
     headers: {
-      Authorization: extractToken(token),
+      Authorization: extractToken(),
     },
   });
   return init.data;
 };
 //
-const likeBlogPost = async (id, update, token) => {
-  const init = await axios.put(Base_url + "/blogs" + "/" + id, update, {
+const likeBlogPost = async (item) => {
+  const init = await axios.put(Base_url + "/blogs" + "/" + item.id, item, {
     headers: {
-      Authorization: extractToken(token),
+      Authorization: extractToken(),
     },
   });
   return init.data;
 };
 //
-const deleteBlogPost = async (id, token) => {
+const deleteBlogPost = async (id) => {
   const init = await axios.delete(Base_url + "/blogs" + "/" + id, {
     headers: {
-      Authorization: extractToken(token),
+      Authorization: extractToken(),
     },
   });
   return init;

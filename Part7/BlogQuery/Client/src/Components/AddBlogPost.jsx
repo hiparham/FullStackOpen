@@ -1,49 +1,20 @@
 import { useState } from "react";
-import { addBlogPost } from "../Helpers/BlogsHelper";
-
-export default function AddBlogPost({ postAdded, info }) {
+export default function AddBlogPost({ postAdded }) {
   const [showForm, setShowForm] = useState(false);
-  const [error, setError] = useState("");
-  const [notif, setNotif] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [author, setAuthor] = useState("");
-  async function sendPost(e) {
+  function sendPost(e) {
     e.preventDefault();
-    try {
-      const response = await addBlogPost(
-        { title: title, url: url, author: author },
-        info.token
-      );
-      postAdded(response);
-      setNotif("Post Created");
-      setTimeout(() => {
-        setNotif("");
-      }, 2000);
-      setTitle("");
-      setUrl("");
-      setAuthor("");
-      setShowForm(false);
-    } catch (error) {
-      setError("Post could not be created", error);
-      setTimeout(() => {
-        setError("");
-      }, 2000);
-    }
+    postAdded({ title, url, author });
+    setTitle("");
+    setAuthor("");
+    setUrl("");
+    setShowForm(false);
   }
   const toggleFormVisibility = () => setShowForm(!showForm);
   return (
     <div className="my-[3rem]">
-      {error && (
-        <p className="text-center text-red-500 font-semibold mb-[1rem]">
-          {error}
-        </p>
-      )}
-      {notif && (
-        <p className="text-center text-emerald-500 font-semibold mb-[1rem]">
-          {notif}
-        </p>
-      )}
       {!showForm && (
         <button
           className="font-semibold text-xl cursor-pointer  py-3 px-12 rounded-md bg-sky-500 w-full block text-white"

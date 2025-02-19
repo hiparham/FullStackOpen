@@ -1,4 +1,5 @@
-const extractToken = (token) => {
+const extractToken = () => {
+  const token = JSON.parse(localStorage.getItem("BlogAuth"))?.token || "";
   if (!token) return;
   return `Bearer ${token}`;
 };

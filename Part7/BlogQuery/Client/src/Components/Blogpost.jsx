@@ -1,30 +1,16 @@
 import { useState } from "react";
 import Heart from "../assets/heart.svg";
-import { deleteBlogPost, likeBlogPost } from "../Helpers/BlogsHelper";
 export default function Blogpost({ post, updateLikes, postDel }) {
   const [show, setShow] = useState(false);
   const currentUser =
     JSON.parse(localStorage.getItem("BlogAuth")).username || "";
-  const currentToken = JSON.parse(localStorage.getItem("BlogAuth")).token || "";
 
-  async function likePost() {
-    const id = post.id;
-    const likes = post.likes + 1;
-    try {
-      const init = await likeBlogPost(id, { likes: likes }, currentToken);
-      updateLikes(init);
-    } catch (error) {
-      console.log("ERROR", error);
-    }
+  function likePost() {
+    updateLikes(post);
   }
   async function deletePost() {
     const id = post.id;
-    try {
-      const init = await deleteBlogPost(id, currentToken);
-      postDel(id);
-    } catch (error) {
-      console.log("ERROR", error);
-    }
+    postDel(id);
   }
   return (
     <li key={post.title}>
