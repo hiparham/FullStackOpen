@@ -17,7 +17,11 @@ Router.get("/", async (req, res) => {
 });
 
 Router.get("/:id", async (req, res) => {
-  const foundUser = await User.findById(req.params.id);
+  const foundUser = await User.findById(req.params.id).populate("blogs", {
+    title: true,
+    likes: true,
+    url: true,
+  });
   return res.json(foundUser);
 });
 
