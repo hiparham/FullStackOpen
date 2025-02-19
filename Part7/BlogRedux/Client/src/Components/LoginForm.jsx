@@ -7,6 +7,7 @@ import {
   cleanUp,
   showSignup,
   showApp,
+  userlogin,
 } from "../store/BlogStore";
 
 export default function LoginForm({ setuserinfo }) {
@@ -22,7 +23,11 @@ export default function LoginForm({ setuserinfo }) {
       dispatch(successNotif(`${data.username} Welcome`));
       setTimeout(() => {
         setuserinfo(data);
+        dispatch(userlogin(data));
         dispatch(showApp());
+        dispatch(cleanUp());
+        setUsername("");
+        setPassword("");
       }, 1500);
     } catch {
       dispatch(errorNotif("Something Went Wrong"));

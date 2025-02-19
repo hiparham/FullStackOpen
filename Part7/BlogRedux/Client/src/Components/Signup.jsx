@@ -19,13 +19,16 @@ export default function Signup() {
   async function handleSignup(e) {
     e.preventDefault();
     try {
-      await dispatch(signUp({ username, name, password }));
+      dispatch(signUp({ username, name, password }));
       dispatch(
         successNotif(`Hello ${username}! you're being redirected to login now`)
       );
       setTimeout(() => {
         dispatch(showLogin());
         dispatch(cleanUp());
+        setUsername("");
+        setPassword("");
+        setName("");
       }, 2000);
     } catch (error) {
       dispatch(errorNotif(error.response.data.message));

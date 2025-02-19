@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LoginForm from "./Components/LoginForm";
 import Signup from "./Components/Signup";
 import BlogAppcontainer from "./Components/BlogAppcontainer";
 import AppWrapper from "./Components/AppWrapper";
 import { useDispatch } from "react-redux";
-import { showApp } from "./store/BlogStore";
+import { showLogin } from "./store/BlogStore";
 export default function App() {
   const [userInfo, setuserInfo] = useState(
     JSON.parse(localStorage.getItem("BlogAuth")) || ""
@@ -20,6 +20,7 @@ export default function App() {
   function logout() {
     localStorage.removeItem("BlogAuth");
     setuserInfo("");
+    dispatch(showLogin());
   }
   // Adding Blogpost
   function addaPost(x) {

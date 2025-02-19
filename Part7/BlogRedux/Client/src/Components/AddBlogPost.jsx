@@ -1,47 +1,76 @@
 import { useState } from "react";
-import { addBlogPost } from "../Helpers/BlogsHelper";
-
-export default function AddBlogPost({ postAdded, info }) {
+import { useDispatch, useSelector } from "react-redux";
+import { addpostdispatch, cleanUp, successNotif } from "../store/BlogStore";
+export default function AddBlogPost() {
+  const dispatch = useDispatch();
+  const notif = useSelector((state) => state.Notification);
   const [showForm, setShowForm] = useState(false);
-  const [error, setError] = useState("");
-  const [notif, setNotif] = useState("");
+  const [error, setError] = useState([]);
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [author, setAuthor] = useState("");
   async function sendPost(e) {
     e.preventDefault();
+    let errors = [];
+    if (title.length < 3) {
+      errors.push("Blog title must be 3+ characters");
+    }
+    if (!url) {
+      errors.push("URL Must exist");
+    }
+    if (!author) {
+      errors.push("Author Must exist");
+    }
+    setError(errors);
+    if (errors.length > 0) {
+      setTimeout(() => {
+        setError([]);
+      }, 2000);
+      return;
+    }
     try {
-      const response = await addBlogPost(
-        { title: title, url: url, author: author },
-        info.token
-      );
-      postAdded(response);
-      setNotif("Post Created");
+      // Try Block
+      dispatch(addpostdispatch({ title, url, author }));
+      dispatch(successNotif(`${title} added!!`));
       setTimeout(() => {
-        setNotif("");
+        dispatch(cleanUp());
       }, 2000);
+      setError([]);
       setTitle("");
-      setUrl("");
       setAuthor("");
+      setUrl("");
       setShowForm(false);
-    } catch (error) {
-      setError("Post could not be created", error);
-      setTimeout(() => {
-        setError("");
-      }, 2000);
+    } catch {
+      // Catch Block
+      setError(["Something went wrong"]);
     }
   }
   const toggleFormVisibility = () => setShowForm(!showForm);
   return (
     <div className="my-[3rem]">
-      {error && (
-        <p className="text-center text-red-500 font-semibold mb-[1rem]">
-          {error}
-        </p>
+      {error.length > 0 && (
+        <div>
+          {error.map((txt) => {
+            return (
+              <li key={txt} className="list-none">
+                <p
+                  key={txt}
+                  className="text-center text-red-500 font-semibold mb-[1rem]"
+                >
+                  {txt}
+                </p>
+              </li>
+            );
+          })}
+        </div>
       )}
       {notif && (
-        <p className="text-center text-emerald-500 font-semibold mb-[1rem]">
-          {notif}
+        <p
+          className={`text-white py-2 text-center ${
+            notif.success ? "bg-emerald-400" : "bg-red-500"
+          }`}
+        >
+          {notif.text}
         </p>
       )}
       {!showForm && (
@@ -59,7 +88,6 @@ export default function AddBlogPost({ postAdded, info }) {
             className="mt-[2rem] flex flex-col gap-[1rem]"
           >
             <input
-              required={true}
               value={title}
               onChange={({ target }) => setTitle(target.value)}
               type="text"
@@ -67,7 +95,6 @@ export default function AddBlogPost({ postAdded, info }) {
               className="py-5 px-3 border rounded-md border-zinc-300 block w-full"
             />
             <input
-              required={true}
               value={author}
               onChange={({ target }) => setAuthor(target.value)}
               type="text"
@@ -75,7 +102,6 @@ export default function AddBlogPost({ postAdded, info }) {
               className="py-5 px-3 border rounded-md border-zinc-300 block w-full"
             />
             <input
-              required={true}
               value={url}
               onChange={({ target }) => setUrl(target.value)}
               type="text"

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Heart from "../assets/heart.svg";
-import { deleteBlogPost, likeBlogPost } from "../Helpers/BlogsHelper";
-export default function Blogpost({ post, updateLikes, postDel }) {
-  if (!post) return null;
+import { useDispatch } from "react-redux";
+import { deletepostdispatch, likepostdispatch } from "../store/BlogStore";
+export default function Blogpost({ post }) {
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
   const currentUser =
     JSON.parse(localStorage.getItem("BlogAuth")).username || "";
   const currentToken = JSON.parse(localStorage.getItem("BlogAuth")).token || "";
@@ -11,22 +12,13 @@ export default function Blogpost({ post, updateLikes, postDel }) {
   async function likePost() {
     const id = post.id;
     const likes = post.likes + 1;
-    try {
-      const init = await likeBlogPost(id, { likes: likes }, currentToken);
-      updateLikes(init);
-    } catch (error) {
-      console.log("ERROR", error);
-    }
+    dispatch(likepostdispatch(id, { likes }, currentToken));
   }
   async function deletePost() {
     const id = post.id;
-    try {
-      const init = await deleteBlogPost(id, currentToken);
-      postDel(id);
-    } catch (error) {
-      console.log("ERROR", error);
-    }
+    dispatch(deletepostdispatch(id,currentToken));
   }
+  if (!post) return null;
   return (
     <li key={post.title}>
       <div data-testid="post" className="flex items-center justify-between">

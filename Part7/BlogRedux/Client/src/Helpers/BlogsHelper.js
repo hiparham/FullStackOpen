@@ -6,10 +6,10 @@ const GetAllBlogs = async () => {
   return posts.data;
 };
 //
-const addBlogPost = async (post, token) => {
+const addBlogPost = async (post) => {
   const init = await axios.post(Base_url + "/blogs", post, {
     headers: {
-      Authorization: extractToken(token),
+      Authorization: extractToken(JSON.parse(localStorage.getItem("BlogAuth"))?.token),
     },
   });
   return init.data;
