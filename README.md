@@ -6,13 +6,14 @@
 
 [Part2: Communicating With Server](https://github.com/hiparham/FullStackOpen/tree/main/Part2)
 
-[Part3: Programming A Server](https://github.com/hiparham/FullStackOpen/tree/main/Part3) 
+[Part3: Programming A Server](https://github.com/hiparham/FullStackOpen/tree/main/Part3)
 
-[Part4: Testing Express Servers, User Administration](https://github.com/hiparham/FullStackOpen/tree/main/Part4) 
+[Part4: Testing Express Servers, User Administration](https://github.com/hiparham/FullStackOpen/tree/main/Part4)
 
-[Part5: Testing React Apps](https://github.com/hiparham/FullStackOpen/tree/main/Part5) 
+[Part5: Testing React Apps](https://github.com/hiparham/FullStackOpen/tree/main/Part5)
 
-[Part6: Advanced State Management](https://github.com/hiparham/FullStackOpen/tree/main/Part6) 
+[Part6: Advanced State Management](https://github.com/hiparham/FullStackOpen/tree/main/Part6)
 
-[Part7: React Router, Custom Hooks, Styling, and Webpack](https://github.com/hiparham/FullStackOpen/tree/main/Part7) 
+[Part7: React Router, Custom Hooks, Styling, and Webpack](https://github.com/hiparham/FullStackOpen/tree/main/Part7)
 
+![Certificate of completion](/Part0/CC.png)
