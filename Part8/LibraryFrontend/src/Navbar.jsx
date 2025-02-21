@@ -18,6 +18,7 @@ export default function Navbar() {
     <nav className="flex items-center py-6 gap-[2rem]">
       <NavbarLink txt="Books" to="/" />
       <NavbarLink txt="Authors" to="/authors" />
+      <NavbarLink txt="Add Book" to="/new" />
     </nav>
   );
 }

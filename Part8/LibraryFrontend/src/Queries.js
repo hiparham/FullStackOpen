@@ -13,7 +13,27 @@ const getAllAuthors = gql`
     allAuthors {
       name
       bookCount
+      born
     }
   }
 `;
-export { GetAllBooks, getAllAuthors };
+const addNewBook = gql`
+  mutation addNewBook(
+    $title: String!
+    $author: String!
+    $published: Int!
+    $genres: [String!]!
+  ) {
+    addBook(
+      title: $title
+      author: $author
+      published: $published
+      genres: $genres
+    ) {
+      title
+      published
+      author
+    }
+  }
+`;
+export { GetAllBooks, getAllAuthors, addNewBook };

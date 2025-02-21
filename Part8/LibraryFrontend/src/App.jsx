@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import Authors from "./Authors";
+import NewBook from "./NewBook";
 
 export default function App() {
   return (
@@ -10,6 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/authors" element={<Authors />} />
+        <Route path="/new" element={<NewBook />} />
       </Routes>
     </main>
   );
