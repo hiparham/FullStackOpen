@@ -149,9 +149,7 @@ const resolvers = {
       const foundAuthor = authors.find((x) => x.name === args.name);
       if (!foundAuthor) return null;
       const newAuthor = { ...foundAuthor, born: args.setBornTo };
-      authors = authors.filter((x) =>
-        x.name === newAuthor.name ? newAuthor : x
-      );
+      authors = authors.map((x) => (x.name === newAuthor.name ? newAuthor : x));
       return newAuthor;
     },
   },

@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { getAllAuthors } from "./Queries";
+import SetBirthForm from "./SetBirthForm";
 
 export default function Authors() {
   const { data } = useQuery(getAllAuthors);
@@ -24,6 +25,7 @@ export default function Authors() {
           })}
         </ul>
       )}
+      <SetBirthForm />
     </div>
   );
 }
