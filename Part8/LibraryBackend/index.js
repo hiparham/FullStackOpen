@@ -17,11 +17,9 @@ bookCount:Int!
 type Book {
 title:String!
 published:String!
-author:String!
+author:Author!
 genres:[String!]!
 }
-
-
 
 type Query {
 initialize:[Book!]!
@@ -54,21 +52,13 @@ const resolvers = {
       await Promise.all(allPromises);
       return await Book.find({});
     },
-    bookCount: () => books.length,
-    authorCount: () => authors.length,
-    allBooks: (root, args) => {
-      let returnedBooks = books;
-      if (args.author) {
-        returnedBooks = returnedBooks.filter((x) => x.author === args.author);
-      }
-      if (args.genre) {
-        returnedBooks = returnedBooks.filter((x) =>
-          x.genres.includes(args.genre)
-        );
-      }
-      return returnedBooks;
+    bookCount: async () => await Book.collection.countDocuments(),
+    authorCount: async () => await Author.collection.countDocuments(),
+    allBooks: async (root, args) => {
+      let query = args.genre ? { genres: args.genre } : {};
+      return await Book.find(query).populate("author");
     },
-    allAuthors: () => authors,
+    allAuthors: async () => await Author.find({}),
   },
   Mutation: {
     addBook: (root, args) => {
