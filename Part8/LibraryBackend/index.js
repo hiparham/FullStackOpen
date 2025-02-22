@@ -1,9 +1,9 @@
+require("dotenv").config();
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const connectDb = require("./Connectdb");
-require("dotenv").config();
-const Author = require("./Author");
-const Book = require("./Book");
+const Author = require("./models/Author");
+const Book = require("./models/Book");
 
 const typeDefs = `
 
@@ -38,24 +38,18 @@ editAuthor(name:String!,setBornTo:Int!):Author
 
 const resolvers = {
   Author: {
-    bookCount: (root) => {
-      return books.filter((x) => x.author === root.name).length;
-    },
+    bookCount: async (root) => await Book.countDocuments({ author: root._id }),
   },
   Query: {
-    initialize: async () => {
-      const allPromises = books.map(async (book) => {
-        const authorFound = await Author.findOne({ name: book.author });
-        const newBook = new Book({ ...book, author: authorFound._id });
-        return newBook.save();
-      });
-      await Promise.all(allPromises);
-      return await Book.find({});
-    },
     bookCount: async () => await Book.collection.countDocuments(),
     authorCount: async () => await Author.collection.countDocuments(),
     allBooks: async (root, args) => {
-      let query = args.genre ? { genres: args.genre } : {};
+      let query = {};
+      if (args.genre) query.genres = args.genre;
+      if (args.author) query.author = args.author;
+
+      console.log(query, "LOL");
+
       return await Book.find(query).populate("author");
     },
     allAuthors: async () => await Author.find({}),
