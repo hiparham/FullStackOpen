@@ -16,4 +16,5 @@ const schema = new mongoose.Schema({
 
 schema.plugin(uniqueValidator);
 
-module.exports = mongoose.model("Author", schema);
+const Author = mongoose.model("Author", schema);
+module.exports = Author;

@@ -1,9 +1,10 @@
 require("dotenv").config();
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
-const connectDb = require("./Connectdb");
+const connectDb = require("./Database/Connectdb");
 const Author = require("./models/Author");
 const Book = require("./models/Book");
+const setupdb = require("./Database/SetUpDb");
 
 const typeDefs = `
 
@@ -47,34 +48,13 @@ const resolvers = {
       let query = {};
       if (args.genre) query.genres = args.genre;
       if (args.author) query.author = args.author;
-
-      console.log(query, "LOL");
-
       return await Book.find(query).populate("author");
     },
     allAuthors: async () => await Author.find({}),
   },
   Mutation: {
-    addBook: (root, args) => {
-      if (args.name.length < 3) return;
-      const newBook = { ...args, id: uuid() };
-      books = books.concat(newBook);
-      if (!authors.find((x) => x.name === args.author)) {
-        authors = authors.concat({
-          name: args.author,
-          id: uuid(),
-          bookCount: 1,
-        });
-      }
-      return newBook;
-    },
-    editAuthor: (root, args) => {
-      const foundAuthor = authors.find((x) => x.name === args.name);
-      if (!foundAuthor) return null;
-      const newAuthor = { ...foundAuthor, born: args.setBornTo };
-      authors = authors.map((x) => (x.name === newAuthor.name ? newAuthor : x));
-      return newAuthor;
-    },
+    addBook: async (root, args) => {},
+    editAuthor: async (root, args) => {},
   },
 };
 
