@@ -1,10 +1,18 @@
 import { useQuery } from "@apollo/client";
 import { GetAllBooks } from "./Queries";
+import { useState } from "react";
+import Filtergenre from "./Filtergenre";
+import FavoriteBooks from "./FavoriteBooks";
 
 export default function Books() {
-  const { data, loading } = useQuery(GetAllBooks);
+  const [currentGenre, setCurrentGenre] = useState("");
+  const { data, loading } = useQuery(GetAllBooks, {
+    variables: { genre: currentGenre },
+  });
+
   return (
     <div>
+      <Filtergenre setCurrentGenre={setCurrentGenre} />
       <div className="grid grid-cols-3">
         <h2 className="font-bold text-lg">Title</h2>
         <h2 className="font-bold text-lg">Published</h2>
@@ -18,12 +26,13 @@ export default function Books() {
               <li key={book.id} className="grid grid-cols-3">
                 <p>{book.title}</p>
                 <p>{book.published}</p>
-                <p>{book.author}</p>
+                <p>{book.author.name}</p>
               </li>
             );
           })}
         </ul>
       )}
+      <FavoriteBooks />
     </div>
   );
 }

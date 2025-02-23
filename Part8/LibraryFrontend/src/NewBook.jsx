@@ -10,6 +10,16 @@ export default function NewBook() {
   const [title, setTitle] = useState("");
   const [addBook] = useMutation(addNewBook, {
     refetchQueries: [{ query: GetAllBooks }, { query: getAllAuthors }],
+    onCompleted: () => {
+      setAuthor("");
+      setPublished("");
+      setTitle("");
+      setGenre("");
+      setGenres([]);
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+    },
   });
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
@@ -20,22 +30,16 @@ export default function NewBook() {
     setGenre("");
   };
 
-  function handleSub(e) {
+  async function handleSub(e) {
     e.preventDefault();
-    addBook({
+    await addBook({
       variables: {
         title: title,
         author: author,
-        published: +published,
-        genres: genre ? [genre, ...genres] : genres,
+        published: published,
+        genres: genres,
       },
     });
-    setAuthor("");
-    setPublished("");
-    setTitle("");
-    setGenre("");
-    setGenres([]);
-    navigate("/");
   }
   return (
     <div>

@@ -36,12 +36,13 @@ value:String!
 }
 
 type Query {
-initialize:[Book!]!
+getFavorites:[Book!]!
 bookCount:Int!
 authorCount:Int!
 allBooks(author:String,genre:String):[Book!]!
 allAuthors:[Author!]!
 me:User
+getGenre:[String!]!
 }
 
 type Mutation{
@@ -58,8 +59,17 @@ const resolvers = {
     bookCount: async (root) => await Book.countDocuments({ author: root._id }),
   },
   Query: {
+    getFavorites: async (root, args, context) => {
+      return await Book.find({ genres: context.favoriteGenre });
+    },
     bookCount: async () => await Book.collection.countDocuments(),
     authorCount: async () => await Author.collection.countDocuments(),
+    getGenre: async () => {
+      const books = await Book.find({});
+      const allGenres = books.map((x) => x.genres).flat(Infinity);
+      const genreSorted = [...new Set(allGenres)];
+      return genreSorted;
+    },
     allBooks: async (root, args) => {
       let query = {};
       if (args.genre) query.genres = args.genre;
@@ -81,7 +91,6 @@ const resolvers = {
       if (!context.username) {
         throw new GraphQLError("Unauthorized.");
       }
-
       if (!title || title.length < 3) {
         throw new GraphQLError("Title must be at least 3 characters.");
       }
@@ -94,12 +103,10 @@ const resolvers = {
       if (genres.length === 0) {
         throw new GraphQLError("At least one genre is required.");
       }
-
       const exists = await Book.findOne({ title });
       if (exists) {
         throw new GraphQLError("Book with this title already exists.");
       }
-
       try {
         let existingAuthor = await Author.findOne({ name: args.author });
         if (!existingAuthor) {
@@ -176,7 +183,6 @@ const resolvers = {
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
-
 connectDb().then(() => {
   startStandaloneServer(server, {
     context: async ({ req, res }) => {
