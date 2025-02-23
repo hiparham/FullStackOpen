@@ -73,10 +73,14 @@ const resolvers = {
       return await Book.find(query).populate("author");
     },
     allAuthors: async () => await Author.find({}),
+    me: (root, args, context) => context,
   },
   Mutation: {
-    addBook: async (root, args) => {
+    addBook: async (root, args, context) => {
       const { title, published, author, genres } = args;
+      if (!context.username) {
+        throw new GraphQLError("Unauthorized.");
+      }
 
       if (!title || title.length < 3) {
         throw new GraphQLError("Title must be at least 3 characters.");
@@ -116,8 +120,11 @@ const resolvers = {
         throw new GraphQLError(error.message);
       }
     },
-    editAuthor: async (root, args) => {
+    editAuthor: async (root, args, context) => {
       const { name, setBornTo } = args;
+      if (!context.username) {
+        throw new GraphQLError("Unauthorized.");
+      }
       const foundAuthor = await Author.findOne({ name: name });
       if (name.length < 3 || !setBornTo) {
         throw new GraphQLError(`Author name and birthyear must exist`, {
@@ -150,6 +157,21 @@ const resolvers = {
       const user = new User({ username: name, favoriteGenre });
       return await user.save();
     },
+    login: async (root, args) => {
+      const { username, password } = args;
+      const userFound = await User.findOne({ username });
+      if (!userFound || password !== "secret") {
+        throw new GraphQLError("Wrong Credentials");
+      }
+      const token = jwt.sign(
+        {
+          username: userFound.username,
+          id: userFound._id,
+        },
+        process.env.JWT_SECRET
+      );
+      return { value: token };
+    },
   },
 };
 
@@ -157,6 +179,14 @@ const server = new ApolloServer({ typeDefs, resolvers });
 
 connectDb().then(() => {
   startStandaloneServer(server, {
+    context: async ({ req, res }) => {
+      let auth = req ? req.headers.authorization : null;
+      if (auth && auth.startsWith("Bearer ")) {
+        const decoded = jwt.verify(auth.slice(7), process.env.JWT_SECRET);
+        const currentUser = await User.findById(decoded.id);
+        return currentUser;
+      }
+    },
     listen: {
       port: 4000,
     },
