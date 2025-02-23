@@ -5,6 +5,9 @@ const connectDb = require("./Database/Connectdb");
 const Author = require("./models/Author");
 const Book = require("./models/Book");
 const setupdb = require("./Database/SetUpDb");
+const { GraphQLError } = require("graphql");
+const User = require("./models/User");
+const jwt = require("jsonwebtoken");
 
 const typeDefs = `
 
@@ -22,17 +25,30 @@ author:Author!
 genres:[String!]!
 }
 
+type User {
+username:String!
+favoriteGenre:String!
+id:ID!
+}
+
+type Token {
+value:String!
+}
+
 type Query {
 initialize:[Book!]!
 bookCount:Int!
 authorCount:Int!
 allBooks(author:String,genre:String):[Book!]!
 allAuthors:[Author!]!
+me:User
 }
 
 type Mutation{
-addBook(title:String!,published:Int!,author:String!,genres:[String!]!):Book
-editAuthor(name:String!,setBornTo:Int!):Author
+addBook(title:String!,published:String!,author:String!,genres:[String!]!):Book
+editAuthor(name:String!,setBornTo:String!):Author
+createUser(name:String!, favoriteGenre:String!):User
+login(username:String!,password:String!):Token
 }
 
 `;
@@ -47,14 +63,93 @@ const resolvers = {
     allBooks: async (root, args) => {
       let query = {};
       if (args.genre) query.genres = args.genre;
-      if (args.author) query.author = args.author;
+      if (args.author) {
+        const foundAuthor = await Author.findOne({ name: args.author });
+        if (!foundAuthor) {
+          throw new GraphQLError("Author does not exist");
+        }
+        query.author = foundAuthor._id;
+      }
       return await Book.find(query).populate("author");
     },
     allAuthors: async () => await Author.find({}),
   },
   Mutation: {
-    addBook: async (root, args) => {},
-    editAuthor: async (root, args) => {},
+    addBook: async (root, args) => {
+      const { title, published, author, genres } = args;
+
+      if (!title || title.length < 3) {
+        throw new GraphQLError("Title must be at least 3 characters.");
+      }
+      if (!author || author.length < 3) {
+        throw new GraphQLError("Author name must be at least 3 characters.");
+      }
+      if (!published) {
+        throw new GraphQLError("Publication year is required.");
+      }
+      if (genres.length === 0) {
+        throw new GraphQLError("At least one genre is required.");
+      }
+
+      const exists = await Book.findOne({ title });
+      if (exists) {
+        throw new GraphQLError("Book with this title already exists.");
+      }
+
+      try {
+        let existingAuthor = await Author.findOne({ name: args.author });
+        if (!existingAuthor) {
+          existingAuthor = await Author.create({
+            name: args.author,
+            bookCount: 1,
+          });
+        }
+        const newBook = new Book({
+          title,
+          published,
+          author: existingAuthor._id,
+          genres,
+        });
+        await newBook.save();
+        return newBook;
+      } catch (error) {
+        throw new GraphQLError(error.message);
+      }
+    },
+    editAuthor: async (root, args) => {
+      const { name, setBornTo } = args;
+      const foundAuthor = await Author.findOne({ name: name });
+      if (name.length < 3 || !setBornTo) {
+        throw new GraphQLError(`Author name and birthyear must exist`, {
+          extensions: {
+            code: "BAD_INPUT",
+          },
+        });
+      }
+      if (!foundAuthor) {
+        throw new GraphQLError(`Author doesn't exist`, {
+          extensions: {
+            code: "NONEXISTENT",
+          },
+        });
+      }
+      const authorUpdates = await Author.findByIdAndUpdate(foundAuthor._id, {
+        born: setBornTo,
+      });
+      return authorUpdates;
+    },
+    createUser: async (root, args) => {
+      const { name, favoriteGenre } = args;
+      const userExists = await User.findOne({ username: name });
+      if (userExists) {
+        throw new GraphQLError("User exists");
+      }
+      if (favoriteGenre.length < 2) {
+        throw new GraphQLError("Favorite genre must exist");
+      }
+      const user = new User({ username: name, favoriteGenre });
+      return await user.save();
+    },
   },
 };
 

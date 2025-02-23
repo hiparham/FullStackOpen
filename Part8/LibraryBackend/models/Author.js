@@ -10,6 +10,7 @@ const schema = new mongoose.Schema({
     minlength: 4,
   },
   born: {
+    default: null,
     type: String,
   },
 });
