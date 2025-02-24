@@ -19,7 +19,7 @@ export default function SetBirthForm() {
       }, 1500);
       return;
     }
-    toggleBirth({ variables: { name: value, year: +year } });
+    toggleBirth({ variables: { name: value, year: year } });
     e.target.reset();
   }
 

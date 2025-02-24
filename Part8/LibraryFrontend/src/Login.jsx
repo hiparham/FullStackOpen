@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useMutation } from "@apollo/client";
 import { loginQuery } from "./Queries";
-import { useNavigate } from "react-router";
 import { useEffect } from "react";
 
 export default function Login({ setToken }) {
-  const navigate = useNavigate("");
   const [login, { data, error }] = useMutation(loginQuery);
 
   useEffect(() => {
@@ -13,7 +11,7 @@ export default function Login({ setToken }) {
     localStorage.setItem("graphlibrary", data.login.value);
     setToken(data.login.value);
     setTimeout(() => {
-      navigate("/");
+      window.location.pathname = "/";
     }, 1000);
   }, [data]);
 

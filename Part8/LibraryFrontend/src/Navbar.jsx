@@ -20,6 +20,9 @@ export default function Navbar({ set }) {
     localStorage.removeItem("graphlibrary");
     client.clearStore();
     set("");
+    setTimeout(() => {
+      window.location.pathname = "/";
+    }, 1000);
   };
   return (
     <nav className="flex items-center py-6 gap-[2rem]">

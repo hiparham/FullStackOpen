@@ -1,15 +1,13 @@
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
-import { addNewBook, getAllAuthors, GetAllBooks } from "./Queries";
-import { useNavigate } from "react-router";
-
+import { addNewBook, GetAllBooks } from "./Queries";
 export default function NewBook() {
-  const navigate = useNavigate();
   const [author, setAuthor] = useState("");
   const [published, setPublished] = useState("");
   const [title, setTitle] = useState("");
   const [addBook] = useMutation(addNewBook, {
-    refetchQueries: [{ query: GetAllBooks }, { query: getAllAuthors }],
+    refetchQueries: [{ query: GetAllBooks }],
+
     onCompleted: () => {
       setAuthor("");
       setPublished("");
@@ -17,7 +15,7 @@ export default function NewBook() {
       setGenre("");
       setGenres([]);
       setTimeout(() => {
-        navigate("/");
+        window.location.pathname = "/";
       }, 1500);
     },
   });
