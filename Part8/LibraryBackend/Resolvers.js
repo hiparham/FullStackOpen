@@ -2,10 +2,12 @@ const { GraphQLError } = require("graphql");
 const Author = require("./models/Author");
 const User = require("./models/User");
 const Book = require("./models/Book");
-//
+const jwt = require("jsonwebtoken");
+const { PubSub } = require("graphql-subscriptions");
+const pubsub = new PubSub();
 const resolvers = {
   Author: {
-    bookCount: async (root) => await Book.countDocuments({ author: root._id }),
+    bookCount: async () => await Book.countDocuments(),
   },
   Query: {
     getFavorites: async (root, args, context) => {
@@ -71,6 +73,7 @@ const resolvers = {
           genres,
         });
         await newBook.save();
+        pubsub.publish("BOOK_ADDED", { bookAdded: newBook });
         return newBook;
       } catch (error) {
         throw new GraphQLError(error.message);
@@ -127,6 +130,11 @@ const resolvers = {
         process.env.JWT_SECRET
       );
       return { value: token };
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterableIterator("BOOK_ADDED"),
     },
   },
 };

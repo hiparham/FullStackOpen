@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+
 const GetAllBooks = gql`
   query getAllBook($genre: String) {
     allBooks(genre: $genre) {
@@ -64,6 +65,14 @@ const getmyFavorites = gql`
     }
   }
 `;
+const bookAdded = gql`
+  subscription {
+    bookAdded {
+      title
+      published
+    }
+  }
+`;
 export {
   GetAllBooks,
   getAllAuthors,
@@ -72,4 +81,5 @@ export {
   loginQuery,
   getGenres,
   getmyFavorites,
+  bookAdded,
 };

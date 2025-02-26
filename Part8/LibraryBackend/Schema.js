@@ -20,6 +20,7 @@ favoriteGenre:String!
 id:ID!
 }
 
+
 type Token {
 value:String!
 }
@@ -39,6 +40,10 @@ addBook(title:String!,published:String!,author:String!,genres:[String!]!):Book
 editAuthor(name:String!,setBornTo:String!):Author
 createUser(name:String!, favoriteGenre:String!):User
 login(username:String!,password:String!):Token
+}
+
+type Subscription{
+bookAdded:Book!
 }
 
 `;
