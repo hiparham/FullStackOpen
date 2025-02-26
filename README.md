@@ -16,4 +16,6 @@
 
 [Part7: React Router, Custom Hooks, Styling, and Webpack](https://github.com/hiparham/FullStackOpen/tree/main/Part7)
 
+[Part8: GraphQL](https://github.com/hiparham/FullStackOpen/tree/main/Part8)
+
 ![Certificate of completion](/Part0/CC.png)
