@@ -24,9 +24,11 @@ const calculateExercises = (days: number[], target: number): RatingSummary => {
       rating === 3
         ? "You are all set!"
         : rating === 2
-        ? "Not bad, but still didnt meet the target"
+        ? "Not bad, could be better"
         : "You are undertrained",
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+const myArguments: number[] = process.argv.slice(2).map((x) => +x);
+
+console.log(calculateExercises(myArguments.slice(0, -1), myArguments[0]));
