@@ -6,7 +6,9 @@
     "ts-node": "ts-node",
     "calculateBmi": "ts-node bmiCalculate.ts",
     "calculateExercises": "ts-node calculateExercises.ts",
-    "dev": "ts-node-dev --respawn --transpile-only app.ts"
+    "start": "ts-node index.ts",
+    "dev": "ts-node-dev index.ts",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -14,9 +16,15 @@
   "type": "commonjs",
   "description": "",
   "devDependencies": {
+    "@eslint/js": "^9.21.0",
+    "@stylistic/eslint-plugin": "^4.1.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^5.0.0",
+    "eslint": "^9.21.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.25.0"
   },
   "dependencies": {
     "express": "^4.21.2"

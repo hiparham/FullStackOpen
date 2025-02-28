@@ -4,7 +4,7 @@ interface ExerciseNumbers {
   workouts: number[];
   target: number;
 }
-interface exerciseSummary {
+export interface exerciseSummary {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -55,7 +55,7 @@ const getRating = (rate: number): string => {
     }
   }
 };
-const calculateExercises = (
+export const calculateExercises = (
   exerciseHours: number[],
   target: number
 ): exerciseSummary => {
@@ -75,14 +75,15 @@ const calculateExercises = (
     average,
   };
 };
-
-try {
-  const { workouts, target } = parseNumbers(process.argv.slice(2));
-  console.log(calculateExercises(workouts, target));
-} catch (error: unknown) {
-  let err: string = "Somewehint Went Wrong :";
-  if (error instanceof Error) {
-    err += error.message;
+if (require.main === module) {
+  try {
+    const { workouts, target } = parseNumbers(process.argv.slice(2));
+    console.log(calculateExercises(workouts, target));
+  } catch (error: unknown) {
+    let err: string = "Somewehint Went Wrong :";
+    if (error instanceof Error) {
+      err += error.message;
+    }
+    console.log(err);
   }
-  console.log(err);
 }
