@@ -1,6 +1,7 @@
 import express, { Response } from "express";
 import { addDiary, findById, getNonsensitive } from "../services/DiaryService";
-import { newDiaryEntry, NonSensitiveDiary } from "../types";
+import { NonSensitiveDiary } from "../types";
+import { toNewDiary } from "../utils";
 const router = express.Router();
 //
 router.get("/", (_req, res: Response<NonSensitiveDiary[]>) => {
@@ -17,11 +18,16 @@ router.get("/:id", (_req, res) => {
 });
 //
 router.post("/", (req, res) => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { weather, visibility, comment, date } = req.body;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const newEntry: newDiaryEntry = { weather, visibility, comment, date };
-  const addedEntry = addDiary(newEntry);
-  res.json(addedEntry);
+  try {
+    const newDiary = toNewDiary(req.body);
+    const addedEntry = addDiary(newDiary);
+    res.json(addedEntry);
+  } catch (error: unknown) {
+    let msg = "Something Went Wrong";
+    if (error instanceof Error) {
+      msg += error.message;
+    }
+    res.status(400).json({ message: msg });
+  }
 });
 export default router;
