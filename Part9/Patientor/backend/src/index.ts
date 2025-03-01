@@ -4,6 +4,7 @@ import DiagnoseRouter from "./routes/DiagnosesRoute";
 import PatientRouter from "./routes/PatientsRoute";
 const app = express();
 app.use(cors());
+app.use(express.json());
 app.get("/api/ping", (_req, res) => {
   res.send("pong!");
 });
