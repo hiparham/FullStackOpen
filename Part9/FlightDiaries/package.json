@@ -6,7 +6,7 @@
     "tsc": "tsc",
     "dev": "ts-node-dev src/index.ts",
     "lint": "eslint .",
-    "start":"node build/index.js"
+    "start": "node build/index.js"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +24,7 @@
     "typescript-eslint": "^8.25.0"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "zod": "^3.24.2"
   }
 }
