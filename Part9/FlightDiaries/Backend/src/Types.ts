@@ -1,5 +1,16 @@
-export type Weather = "sunny" | "rainy" | "windy" | "cloudy" | "stormy";
-export type Visibility = "poor" | "good" | "great" | "ok";
+export enum Weather {
+  Sunny = "sunny",
+  Rainy = "rainy",
+  Windy = "windy",
+  Cloudy = "cloudy",
+  Stormy = "stormy",
+}
+export enum Visibility {
+  Poor = "poor",
+  Good = "good",
+  Great = "great",
+  Ok = "ok",
+}
 export interface DiaryEntry {
   id: number;
   date: string;

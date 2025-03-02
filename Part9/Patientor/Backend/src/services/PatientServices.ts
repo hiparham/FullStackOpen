@@ -1,9 +1,15 @@
 import allPatients from "../../data/patients";
-import { PatientShow } from "../Types";
+import { v4 as uuid } from "uuid";
+const generateId = (): string => uuid();
+import { NewPatientEntry, PatientShow } from "../Types";
 const getAllPatients = (): PatientShow[] => {
   return allPatients.map(({ id, name, dateOfBirth, gender, occupation }) => {
     return { id, name, dateOfBirth, gender, occupation };
   });
 };
-
-export { getAllPatients };
+const addPatient = (patient: NewPatientEntry): PatientShow => {
+  const newPatient = { id: generateId(), ...patient };
+  allPatients.push(newPatient);
+  return newPatient;
+};
+export { getAllPatients, addPatient };

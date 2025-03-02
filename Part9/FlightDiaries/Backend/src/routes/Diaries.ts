@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express, { Response } from "express";
 import { addDiary, getAllDiaries, getDiary } from "../services/DiaryServices";
 import { nonsensitivediary } from "../Types";
@@ -19,9 +18,15 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const newEntry = toNewDiary(req.body);
-  const addedEntry = addDiary(newEntry);
-  res.json(addedEntry);
+  try {
+    const diaryProperty = toNewDiary(req.body);
+    const newEntry = addDiary(diaryProperty);
+    res.status(201).json(newEntry);
+  } catch (error: unknown) {
+    let err = "Something went wrong :";
+    if (error instanceof Error) err += error.message;
+    res.status(400).json(err);
+  }
 });
 
 export default router;
