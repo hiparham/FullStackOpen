@@ -1,6 +1,6 @@
 import { isNan } from "./isNan";
 
-interface ExerciseSummary {
+export interface ExerciseSummary {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -30,7 +30,7 @@ const giveRatingDescription = (rate: number): string => {
     : "You are all set!";
 };
 
-const calculateExercises = (
+export const calculateExercises = (
   days: number[],
   target: number
 ): ExerciseSummary => {
@@ -51,13 +51,15 @@ const calculateExercises = (
     average,
   };
 };
-try {
-  const { days, target } = parseArguments(process.argv);
-  console.log(calculateExercises(days, target));
-} catch (error: unknown) {
-  let err = "Something went wrong :";
-  if (error instanceof Error) {
-    err += error.message;
+if (require.main === module) {
+  try {
+    const { days, target } = parseArguments(process.argv);
+    console.log(calculateExercises(days, target));
+  } catch (error: unknown) {
+    let err = "Something went wrong :";
+    if (error instanceof Error) {
+      err += error.message;
+    }
+    console.log(err);
   }
-  console.log(err);
 }

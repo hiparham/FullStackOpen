@@ -17,7 +17,7 @@ const parseArguments = (args: string[]): CalcParams => {
   }
   throw new Error("Invalid height or weight");
 };
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const bmi: number = weight / (height / 100) ** 2;
   if (bmi < 18.5) {
     return "You Are Underweight";
@@ -27,8 +27,15 @@ const calculateBmi = (height: number, weight: number): string => {
     return "You Are Overweight.";
   }
 };
-
-try {
-  const { height, weight } = parseArguments(process.argv);
-  console.log(calculateBmi(height, weight));
-} catch (error) {}
+if (require.main === module) {
+  try {
+    const { height, weight } = parseArguments(process.argv);
+    console.log(calculateBmi(height, weight));
+  } catch (error) {
+    let err = "Something went wrong :";
+    if (error instanceof Error) {
+      err += error.message;
+    }
+    console.log(err);
+  }
+}

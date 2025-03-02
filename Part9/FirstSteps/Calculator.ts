@@ -47,6 +47,7 @@ const calculator = (
   }
 };
 //
+if (require.main === module) {
 try {
   const { num_1, num_2, op } = parseArguments(process.argv);
   console.log(calculator(num_1, num_2, op));
@@ -56,4 +57,5 @@ try {
     err += error.message;
   }
   console.log(err);
+}
 }
