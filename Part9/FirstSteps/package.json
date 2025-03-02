@@ -1,10 +1,15 @@
 {
   "name": "firststeps",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "tsc": "tsc",
-    "dev": "tsnd --respawn main.ts"
+    "build": "tsc",
+    "dev": "tsnd --respawn main.ts",
+    "calc": "ts-node Calculator.ts",
+    "bmicalc": "ts-node BmiCalculator.ts",
+    "calculateExercises": "ts-node ExerciseCalculator.ts",
+    "start": "node build/main.js"
   },
   "keywords": [],
   "author": "",
@@ -13,8 +18,11 @@
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.0",
-    "express": "^4.21.2",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "5.7"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
   }
 }
