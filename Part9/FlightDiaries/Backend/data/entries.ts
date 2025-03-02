@@ -1,5 +1,4 @@
 import { DiaryEntry } from "../src/Types";
-import { toNewDiary } from "../src/utils";
 
 const diaries = [
   {
@@ -33,7 +32,7 @@ const diaries = [
 ];
 
 const data = diaries.map((diary) => {
-  const newDiary = toNewDiary(diary) as DiaryEntry;
+  const newDiary = diary as DiaryEntry;
   newDiary.id = diary.id;
   return newDiary;
 });

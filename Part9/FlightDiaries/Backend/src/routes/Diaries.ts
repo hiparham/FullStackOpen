@@ -1,7 +1,8 @@
-import express, { Response } from "express";
+import express, { Request, Response } from "express";
 import { addDiary, getAllDiaries, getDiary } from "../services/DiaryServices";
-import { nonsensitivediary } from "../Types";
-import { toNewDiary } from "../utils";
+import { NewEntry, nonsensitivediary } from "../Types";
+import { AddPostMiddleWare } from "../Middleware";
+
 const router = express.Router();
 
 router.get("/", (_req, res: Response<nonsensitivediary[]>) => {
@@ -17,16 +18,13 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/", (req, res) => {
-  try {
-    const diaryProperty = toNewDiary(req.body);
-    const newEntry = addDiary(diaryProperty);
+router.post(
+  "/",
+  AddPostMiddleWare,
+  (req: Request<unknown, unknown, NewEntry>, res: Response) => {
+    const newEntry = addDiary(req.body);
     res.status(201).json(newEntry);
-  } catch (error: unknown) {
-    let err = "Something went wrong :";
-    if (error instanceof Error) err += error.message;
-    res.status(400).json(err);
   }
-});
+);
 
 export default router;
