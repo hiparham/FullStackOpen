@@ -1,8 +1,8 @@
 import Content from "./Components/Content";
 import Header from "./Components/Header";
 import Total from "./Components/Total";
-import { courseParts } from "./Types";
-const courseName = "Half Stack application development";
+import { courseName, courseParts } from "./Types";
+
 const App = () => {
   return (
     <div>

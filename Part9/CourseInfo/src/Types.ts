@@ -2,16 +2,20 @@ interface Course {
   name: string;
   exerciseCount: number;
 }
+
 interface CoursePartBase extends Course {
   description: string;
 }
+
 interface CoursePartBasic extends CoursePartBase {
   kind: "basic";
 }
+
 interface CoursePartGroup extends Course {
   groupProjectCount: number;
   kind: "group";
 }
+
 interface CoursePartBackground extends CoursePartBase {
   backgroundMaterial: string;
   kind: "background";
@@ -27,7 +31,7 @@ type CoursePart =
   | CoursePartGroup
   | CoursePartBackground
   | CourseSpecial;
-
+const courseName = "Half Stack application development";
 const courseParts: CoursePart[] = [
   {
     name: "Fundamentals",
@@ -75,4 +79,4 @@ export type {
   CoursePartBackground,
   CoursePart,
 };
-export { courseParts };
+export { courseParts,courseName };
