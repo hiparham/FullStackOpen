@@ -1,0 +1,21 @@
+li,
+ul {
+  list-style: none;
+}
+h1 {
+  text-transform: capitalize;
+}
+.course_header {
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  font-family: sans-serif;
+}
+footer {
+  color: rgb(0, 57, 131);
+}
