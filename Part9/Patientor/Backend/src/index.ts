@@ -5,7 +5,7 @@ app.use(cors());
 app.use(express.json());
 import PatientsRouter from "./routes/Patients";
 import DiagnosesRouter from "./routes/Diagnoses";
-import { ErrorHandler } from "./Middleware";
+import { ErrorHandler } from "./utils/Middleware";
 
 app.use("/api/patients", PatientsRouter);
 app.use("/api/diagnoses", DiagnosesRouter);

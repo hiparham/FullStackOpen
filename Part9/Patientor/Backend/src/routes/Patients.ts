@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { addPatient, getAllPatients } from "../services/PatientServices";
-import { NewPatient } from "../Types";
-import { AddPatientMiddleware } from "../Middleware";
+import { NewPatient } from "../utils/Types";
+import { AddPatientMiddleware } from "../utils/Middleware";
 
 const router = express.Router();
 

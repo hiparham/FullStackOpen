@@ -1,7 +1,7 @@
 import allPatients from "../../data/patients";
 import { v4 as uuid } from "uuid";
 const generateId = (): string => uuid();
-import { NewPatient, PatientShow } from "../Types";
+import { NewPatient, PatientShow } from "../utils/Types";
 
 const getAllPatients = (): PatientShow[] => {
   return allPatients.map(({ id, name, dateOfBirth, gender, occupation }) => {
