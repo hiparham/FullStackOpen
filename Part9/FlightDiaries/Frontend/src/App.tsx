@@ -12,11 +12,16 @@ export default function App() {
       setAll(response);
     });
   }, []);
+
+  const AddNew = (x: Diary) => {
+    setAll([...AllDiaries, x]);
+  };
+
   return (
     <div className="bg-stone-900 min-h-screen">
       <main className="max-w-screen-lg mx-auto w-11/12">
         <Header />
-        <DiaryForm />
+        <DiaryForm AddNew={AddNew} />
         <DisplayDiary diaries={AllDiaries} />
       </main>
     </div>

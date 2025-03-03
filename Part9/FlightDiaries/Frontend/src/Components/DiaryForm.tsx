@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { AddDiary } from "../Helpers/DiaryHelper";
-import { NewDiary, Visibility, Weather } from "../Helpers/Types";
+import { Diary, NewDiary, Visibility, Weather } from "../Helpers/Types";
 import { useState } from "react";
 import FormNotification from "./FormNotification";
 import WeatherSection from "./Weathersection";
@@ -12,7 +12,7 @@ interface Err {
   path: string[];
 }
 
-export default function DiaryForm() {
+export default function DiaryForm({AddNew}:{AddNew:(x:Diary)=>void}) {
   const [notif, setNotif] = useState("");
   function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
@@ -24,7 +24,7 @@ export default function DiaryForm() {
     const newEntry: NewDiary = { date, weather, visibility, comment };
     AddDiary(newEntry)
       .then((response) => {
-        console.log(response, "SERVER");
+        AddNew(response);
       })
       .catch((error: AxiosError) => {
         if (!error) return;
@@ -47,7 +47,7 @@ export default function DiaryForm() {
       <FormNotification notif={notif} />
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-[.5rem] mb-[2rem]"
+        className="flex flex-col gap-[1rem] mb-[2rem]"
       >
         <RadioWrapper label="visibility">
           <VisibilitySection label="poor" />
@@ -62,19 +62,14 @@ export default function DiaryForm() {
           <WeatherSection label="cloudy" />
           <WeatherSection label="stormy" />
         </RadioWrapper>
-        <input
-          type="text"
-          placeholder="Date"
-          name="date"
-          className="bg-zinc-800 text-zinc-200 placeholder:text-zinc-400 py-3 px-2"
-        />
+        <input type="date" name="date" className="bg-white py-2 px-2 max-w-[15rem]"/>
         <input
           type="text"
           placeholder="Comment"
           name="comment"
           className="bg-zinc-800 text-zinc-200 placeholder:text-zinc-400 py-3 px-2"
         />
-        <button className="bg-white py-3 mt-[1rem] cursor-pointer">
+        <button className="bg-white py-3  cursor-pointer">
           Add Diary
         </button>
       </form>
