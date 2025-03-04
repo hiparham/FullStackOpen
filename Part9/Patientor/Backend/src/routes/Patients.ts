@@ -1,12 +1,25 @@
 import express, { Request, Response } from "express";
-import { addPatient, getAllPatients } from "../services/PatientServices";
-import { NewPatient } from "../utils/Types";
+import {
+  addPatient,
+  getAllPatients,
+  getPatient,
+} from "../services/PatientServices";
+import { NewPatient, PatientEntry } from "../utils/Types";
 import { AddPatientMiddleware } from "../utils/Middleware";
 
 const router = express.Router();
 
 router.get("/", (_req, res) => {
   res.json(getAllPatients());
+});
+
+router.get("/:id", (req, res) => {
+  const Patient = getPatient(req.params.id) as PatientEntry;
+  if (Patient) {
+    res.json(Patient);
+  } else {
+    res.status(404).json({ message: "No Patient Found" });
+  }
 });
 
 router.post(

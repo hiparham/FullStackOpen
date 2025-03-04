@@ -5,6 +5,9 @@ export enum Gender {
   F = "female",
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface Entry {}
+
 export interface PatientEntry {
   id: string;
   name: string;
@@ -12,6 +15,7 @@ export interface PatientEntry {
   ssn: string;
   gender: Gender;
   occupation: string;
+  entries: Entry[];
 }
 
 export interface DiagnoseEntry {
@@ -19,13 +23,16 @@ export interface DiagnoseEntry {
   name: string;
   latin?: string;
 }
+
 export const NewPatientSchema = z.object({
   name: z.string(),
   dateOfBirth: z.string().date(),
-  ssn: z.string().min(3,{message:"Real Credit card"}),
+  ssn: z.string().min(3, { message: "Real Credit card" }),
   gender: z.nativeEnum(Gender),
-  occupation: z.string().min(3,{message:"Insert your job"}),
+  occupation: z.string().min(3, { message: "Insert your job" }),
 });
 
 export type NewPatient = z.infer<typeof NewPatientSchema>;
-export type PatientShow = Omit<PatientEntry, "ssn">;
+
+export type PatientShow = Omit<PatientEntry, "ssn" | "entries">;
+
