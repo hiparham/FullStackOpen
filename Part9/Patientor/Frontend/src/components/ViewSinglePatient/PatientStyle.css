@@ -1,0 +1,18 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+li,
+ul {
+  list-style: none;
+}
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.entry_item {
+  padding: 1rem;
+  border: 1px solid #c5c5c5;
+}
