@@ -24,6 +24,7 @@ export default function SinglePatientPage() {
         SetPatient(response);
       });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!id || !Patient || diagnoses.length === 0) return null;
