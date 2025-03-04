@@ -15,6 +15,7 @@ router.get("/", (_req, res) => {
 
 router.get("/:id", (req, res) => {
   const Patient = getPatient(req.params.id) as PatientEntry;
+
   if (Patient) {
     res.json(Patient);
   } else {

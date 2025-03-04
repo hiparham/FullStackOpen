@@ -1,12 +1,51 @@
 import { z } from "zod";
 
 export enum Gender {
-  M = "male",
-  F = "female",
+  Male = "male",
+  Female = "female",
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface Entry {}
+export type Entry =
+  | HealthCheckEntry
+  | HospitalEntry
+  | OccupationalHealthcareEntry;
+
+interface BaseEntry {
+  id: string;
+  description: string;
+  date: string;
+  specialist: string;
+  diagnosisCodes?: DiagnoseEntry["code"][];
+}
+
+export enum HealthCheckRating {
+  "Healthy" = 0,
+  "LowRisk" = 1,
+  "HighRisk" = 2,
+  "CriticalRisk" = 3,
+}
+
+interface HealthCheckEntry extends BaseEntry {
+  type: "HealthCheck";
+  healthCheckRating: HealthCheckRating;
+}
+
+interface HospitalEntry extends BaseEntry {
+  type: "Hospital";
+  discharge: {
+    date: string;
+    criterie: string;
+  };
+}
+
+interface OccupationalHealthcareEntry extends BaseEntry {
+  type: "OccupationalHealthcare";
+  employerName: string;
+  sichLeave: {
+    startDate: string;
+    endDate: string;
+  };
+}
 
 export interface PatientEntry {
   id: string;
@@ -35,4 +74,3 @@ export const NewPatientSchema = z.object({
 export type NewPatient = z.infer<typeof NewPatientSchema>;
 
 export type PatientShow = Omit<PatientEntry, "ssn" | "entries">;
-

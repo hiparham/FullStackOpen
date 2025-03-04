@@ -21,4 +21,9 @@ export interface Patient {
 export interface PatientSingle extends Patient {
   entries: [];
 }
+export interface Entry {
+  date: string;
+  description: string;
+  diagnosisCodes: string[];
+}
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
