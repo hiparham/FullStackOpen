@@ -19,18 +19,5 @@
 [Part8: GraphQL](https://github.com/hiparham/FullStackOpen/tree/main/Part8)
 
 [Part9: TypeScript](https://github.com/hiparham/FullStackOpen/tree/main/Part9)
-<br/>
-<br/>
-**Core Course Certificate**
-<br/>
-![Certificate of completion](/Part0/CC.png)
-<br/>
-<br/>
-**GraphQL Certificate**
-<br/>
-![Certificate of completion](/Part0/Graph.png)
-<br/>
-<br/>
-**TypeScript Certificate**
-<br/>
-![TS](/Part0/TS.png)
+
+[Certificates Of Completion](https://github.com/hiparham/FullStackOpen/tree/main/Certificates)
